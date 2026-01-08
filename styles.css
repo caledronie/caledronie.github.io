@@ -333,3 +333,17 @@ code{
   background-repeat: no-repeat;
 }.contact-lines p { margin: 10px 0; }
 .small { font-size: 0.9rem; }
+/* CONTACT : cartes côte à côte sur écran large */
+#contact .grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* Mobile : une carte sous l’autre */
+@media (max-width: 768px) {
+  #contact .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
