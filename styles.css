@@ -318,3 +318,17 @@ code{
   .nav__link, .nav__cta{width: 100%; text-align:center}
   .hero__stats{grid-template-columns: 1fr}
 }
+/* === HERO BACKGROUND IMAGE === */
+.hero {
+  position: relative;
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(11,15,20,0.85),
+      rgba(11,15,20,0.55)
+    ),
+    url("assets/hero-drone.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
