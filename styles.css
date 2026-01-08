@@ -365,3 +365,7 @@ code{
     flex-direction: column !important;
   }
 }
+.content.narrow {
+  max-width: 900px;
+  margin: 0 auto;
+}
