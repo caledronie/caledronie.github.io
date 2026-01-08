@@ -1,12 +1,312 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Caledronie – Centre de formation drone</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Caledronie — Centre de formation drone professionnel</title>
+  <meta name="description" content="Caledronie — Centre de formation drone professionnel. Formations, accompagnement, sécurité, réglementation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <h1>Caledronie</h1>
-  <p>Centre de formation drone professionnel</p>
-  <p>Site en cours de construction.</p>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="#accueil" aria-label="Retour à l'accueil">
+        <span class="brand__logo" aria-hidden="true">C</span>
+        <span class="brand__text">
+          <span class="brand__name">Caledronie</span>
+          <span class="brand__tag">Formation drone professionnel</span>
+        </span>
+      </a>
+
+      <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav" aria-label="Navigation principale">
+        <a href="#accueil" class="nav__link">Accueil</a>
+        <a href="#formations" class="nav__link">Formations</a>
+        <a href="#temoignages" class="nav__link">Témoignages</a>
+        <a href="#galerie" class="nav__link">Galerie</a>
+        <a href="#apropos" class="nav__link">À propos</a>
+        <a href="#contact" class="nav__cta">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main>
+    <section id="accueil" class="section hero">
+      <div class="container hero__grid">
+        <div class="hero__content">
+          <p class="badge">Centre de formation drone professionnel</p>
+          <h1>Formez-vous au drone avec une approche <span class="accent">terrain</span>, <span class="accent">sécurité</span> et <span class="accent">performance</span>.</h1>
+          <p class="lead">
+            Caledronie accompagne les télépilotes et professionnels : réglementation, bonnes pratiques, préparation mission,
+            maîtrise des risques, et montée en compétences.
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#formations">Voir les formations</a>
+            <a class="btn btn--ghost" href="#contact">Demander un devis</a>
+          </div>
+
+          <div class="hero__stats">
+            <div class="stat">
+              <div class="stat__value">100%</div>
+              <div class="stat__label">adapté à vos besoins</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">Pro</div>
+              <div class="stat__label">approche opérationnelle</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">Sécurité</div>
+              <div class="stat__label">au cœur de la méthode</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__card">
+          <div class="card card--glass">
+            <h2 class="card__title">Ce que vous obtenez</h2>
+            <ul class="checklist">
+              <li>Une progression claire, simple, efficace</li>
+              <li>Des supports réutilisables (checklists, procédures)</li>
+              <li>Des mises en situation réalistes</li>
+              <li>Un suivi et des conseils après la formation</li>
+            </ul>
+
+            <div class="card__note">
+              <span class="dot"></span>
+              <p><strong>Site en cours de construction :</strong> contenu et galerie seront enrichis au fil du temps.</p>
+            </div>
+          </div>
+          <div class="card card--solid">
+            <h3 class="card__title">Besoin rapide ?</h3>
+            <p class="muted">Réponse sous 24–48h ouvrées (selon disponibilité).</p>
+            <a class="btn btn--primary btn--full" href="#contact">Contacter Caledronie</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formations -->
+    <section id="formations" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Formations</h2>
+          <p class="muted">Exemples de parcours. On peut adapter selon votre niveau, votre matériel et vos objectifs.</p>
+        </div>
+
+        <div class="grid cards">
+          <article class="tile">
+            <h3>Initiation pro</h3>
+            <p>Prise en main, sécurité, préparation mission, gestion des incidents, bonnes pratiques.</p>
+            <ul class="mini">
+              <li>Public : débutant à intermédiaire</li>
+              <li>Format : présentiel / terrain</li>
+            </ul>
+          </article>
+
+          <article class="tile">
+            <h3>Perfectionnement</h3>
+            <p>Optimisation des réglages, workflows, qualité d’image, rigueur opérationnelle.</p>
+            <ul class="mini">
+              <li>Public : télépilotes déjà actifs</li>
+              <li>Focus : efficacité & précision</li>
+            </ul>
+          </article>
+
+          <article class="tile">
+            <h3>Sécurité & conformité</h3>
+            <p>Analyse des risques, procédures, checklists, préparation administrative et terrain.</p>
+            <ul class="mini">
+              <li>Pour : entreprises / équipes</li>
+              <li>Livrables : documents opérationnels</li>
+            </ul>
+          </article>
+
+          <article class="tile">
+            <h3>Modules sur mesure</h3>
+            <p>FPV, inspection, photo/vidéo, scénarios types, et accompagnement projet.</p>
+            <ul class="mini">
+              <li>Contenu : selon vos besoins</li>
+              <li>Devis : rapide</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="callout">
+          <div>
+            <h3>Tu veux intégrer une certification à ton offre ?</h3>
+            <p class="muted">On peut structurer une offre claire et “pro” (programme, objectifs, évaluation, supports).</p>
+          </div>
+          <a class="btn btn--primary" href="#contact">En discuter</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section id="temoignages" class="section section--alt">
+      <div class="container">
+        <div class="section__head">
+          <h2>Témoignages</h2>
+          <p class="muted">Remplace ces exemples par de vrais retours clients quand tu veux.</p>
+        </div>
+
+        <div class="grid testimonials">
+          <figure class="quote">
+            <blockquote>“Formation très structurée. On repart avec des méthodes applicables dès le lendemain.”</blockquote>
+            <figcaption>— Client Pro, secteur BTP</figcaption>
+          </figure>
+
+          <figure class="quote">
+            <blockquote>“Approche sécurité très claire, checklists simples, ça change tout sur le terrain.”</blockquote>
+            <figcaption>— Télépilote indépendant</figcaption>
+          </figure>
+
+          <figure class="quote">
+            <blockquote>“On a gagné en efficacité sur nos missions et amélioré la qualité des livrables.”</blockquote>
+            <figcaption>— Entreprise, inspection</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galerie -->
+    <section id="galerie" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Galerie</h2>
+          <p class="muted">
+            Ajoute tes images dans <code>assets/</code> puis remplace les vignettes ci-dessous.
+          </p>
+        </div>
+
+        <div class="grid gallery">
+          <a class="shot" href="#" aria-label="Image 1 (à remplacer)">
+            <div class="shot__ph" aria-hidden="true"></div>
+            <span class="shot__label">Mission terrain</span>
+          </a>
+          <a class="shot" href="#" aria-label="Image 2 (à remplacer)">
+            <div class="shot__ph" aria-hidden="true"></div>
+            <span class="shot__label">Briefing sécurité</span>
+          </a>
+          <a class="shot" href="#" aria-label="Image 3 (à remplacer)">
+            <div class="shot__ph" aria-hidden="true"></div>
+            <span class="shot__label">Exercices</span>
+          </a>
+          <a class="shot" href="#" aria-label="Image 4 (à remplacer)">
+            <div class="shot__ph" aria-hidden="true"></div>
+            <span class="shot__label">Matériel</span>
+          </a>
+        </div>
+
+        <p class="tip">
+          Astuce : dès que tu as des photos, on mettra de vraies images + une lightbox (clic pour agrandir).
+        </p>
+      </div>
+    </section>
+
+    <!-- À propos -->
+    <section id="apropos" class="section section--alt">
+      <div class="container about">
+        <div>
+          <div class="section__head">
+            <h2>À propos</h2>
+            <p class="muted">Une présentation claire, courte, rassurante. Modifiable à tout moment.</p>
+          </div>
+
+          <div class="prose">
+            <p>
+              <strong>Caledronie</strong> est un centre de formation orienté pratique, avec une priorité :
+              <strong>opérer proprement et en sécurité</strong>.
+            </p>
+            <p>
+              Objectif : te donner des méthodes simples (checklists, préparation mission, gestion des risques),
+              et une progression concrète sur le terrain.
+            </p>
+            <ul>
+              <li>Approche professionnelle, basée sur l’expérience terrain</li>
+              <li>Méthode claire, supports réutilisables</li>
+              <li>Adaptation au matériel et aux besoins</li>
+            </ul>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <h3>Infos rapides</h3>
+          <ul class="facts">
+            <li><span>Zone</span><span>Nouvelle-Calédonie (à préciser)</span></li>
+            <li><span>Formats</span><span>Présentiel / terrain</span></li>
+            <li><span>Langue</span><span>Français</span></li>
+          </ul>
+          <p class="muted small">Tu pourras remplacer ces infos par tes infos exactes.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Contact</h2>
+          <p class="muted">
+            Méthode 100% gratuite : bouton email + liens. (Un “vrai” formulaire gratuit est possible, mais c’est une étape en plus.)
+          </p>
+        </div>
+
+        <div class="contact">
+          <div class="contact__card">
+            <h3>Écris-moi</h3>
+            <p class="muted">Remplace l’email ci-dessous par le tien.</p>
+
+            <div class="contact__actions">
+              <a class="btn btn--primary btn--full" href="mailto:contact@caledronie.com?subject=Demande%20d%27infos%20-%20Caledronie">
+                Envoyer un email
+              </a>
+              <a class="btn btn--ghost btn--full" href="#formations">Voir les formations</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="small muted">
+              Téléphone / WhatsApp / réseaux : ajoute les liens ici quand tu veux.
+            </p>
+            <div class="links">
+              <a href="#" aria-label="Facebook (à remplacer)">Facebook</a>
+              <a href="#" aria-label="Instagram (à remplacer)">Instagram</a>
+              <a href="#" aria-label="YouTube (à remplacer)">YouTube</a>
+            </div>
+          </div>
+
+          <div class="contact__card contact__card--hint">
+            <h3>Option formulaire (gratuit)</h3>
+            <p class="muted">
+              Si tu veux un formulaire “Nom / Email / Message” sans payer, on peut utiliser une solution gratuite type
+              Formspree / Netlify Forms (selon ton choix). Dis-moi et je te le mets.
+            </p>
+            <ul class="mini">
+              <li>Simple</li>
+              <li>Anti-spam</li>
+              <li>Réception par email</li>
+            </ul>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <p class="small muted">© <span id="year"></span> Caledronie — Tous droits réservés.</p>
+          <a class="small muted" href="#" aria-label="Mentions légales (à ajouter)">Mentions légales</a>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
