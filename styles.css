@@ -347,3 +347,21 @@ code{
     grid-template-columns: 1fr;
   }
 }
+/* FORCER les cartes Contact côte à côte */
+#contact .grid-2 {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 24px;
+}
+
+/* Chaque carte prend 50% */
+#contact .grid-2 > .card {
+  flex: 1;
+}
+
+/* Mobile : empilé */
+@media (max-width: 768px) {
+  #contact .grid-2 {
+    flex-direction: column !important;
+  }
+}
