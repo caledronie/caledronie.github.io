@@ -369,3 +369,8 @@ code{
   max-width: 900px;
   margin: 0 auto;
 }
+#apropos .grid-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
