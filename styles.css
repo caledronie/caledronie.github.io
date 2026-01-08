@@ -437,3 +437,21 @@ code{
   .formations-3 { grid-template-columns: 1fr; }
   .formation-img { height: 200px; }
 }
+.apropos-bg {
+  background-image: url("kuendu.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}.apropos-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 0;
+}
+
+.apropos-bg > * {
+  position: relative;
+  z-index: 1;
+}
