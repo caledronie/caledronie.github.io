@@ -331,4 +331,5 @@ code{
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
+}.contact-lines p { margin: 10px 0; }
+.small { font-size: 0.9rem; }
