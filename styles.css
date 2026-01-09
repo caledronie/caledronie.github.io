@@ -743,3 +743,16 @@ code{
 .formation-card li::before {
     content: none !important;
 }
+/* Kill bullets everywhere in that card */
+.formation-card ul,
+.formation-card ol {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.formation-card li::before,
+.formation-card li::marker {
+  content: "" !important;
+  display: none !important;
+}
