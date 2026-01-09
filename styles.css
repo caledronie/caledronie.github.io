@@ -608,3 +608,39 @@ code{
 .contact-link svg {
   flex-shrink: 0;
 }
+/* ===== CONTACT : blocs lisibles ===== */
+#contact .card,
+#contact .contact-box,
+#contact .contact-panel {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 20px 24px;
+}/* Boutons Contact */
+#contact .btn,
+#contact .contact-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+#contact .btn:hover,
+#contact .contact-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}#contact .contact-links a {
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+#contact .contact-links a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}#contact .contact-grid {
+  margin-top: 40px;
+}
