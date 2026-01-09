@@ -723,3 +723,9 @@ code{
 #contact .btn-outline:hover{
   background: rgba(0,0,0,0.55);
 }
+/* Contact – descendre la ligne Réseaux */
+#contact .coordonnees .reseaux,
+#contact .coordonnees p:last-child {
+  margin-top: 18px;
+  opacity: 0.9;
+}
