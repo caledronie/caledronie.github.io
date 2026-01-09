@@ -766,3 +766,6 @@ code{
 .glide__bullet {
   display: none !important;
 }
+.formation-card li::before {
+  content: none !important;
+}
