@@ -568,3 +568,16 @@ code{
   color: #ffffff;
   text-decoration: underline;
 }
+/* FORCE couleur blanche pour tous les liens du contact */
+#contact a,
+#contact a:visited,
+#contact a:active {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+/* Hover */
+#contact a:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
