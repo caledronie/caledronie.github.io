@@ -581,3 +581,20 @@ code{
   color: #ffffff !important;
   text-decoration: underline;
 }
+/* ===== FORCE BLANC : CONTACT (EMAIL / TEL / RÉSEAUX) ===== */
+#contact,
+#contact * {
+  color: #ffffff !important;
+}
+
+#contact a,
+#contact a:visited,
+#contact a:active {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+#contact a:hover {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
