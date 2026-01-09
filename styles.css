@@ -683,3 +683,20 @@ code{
 #contact a:hover {
   text-decoration: underline !important;
 }
+/* CONTACT : 2 cadres côte à côte */
+#contact .contact-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 18px;
+}
+
+/* Sur mobile : 1 colonne */
+@media (max-width: 900px){
+  #contact .contact-grid{ grid-template-columns: 1fr; }
+}#contact .contact-grid > div{
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
