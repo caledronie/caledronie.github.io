@@ -734,3 +734,12 @@ code{
   margin-top: 22px;
   display: block;
 }
+.formation-card ul {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.formation-card li::before {
+    content: none !important;
+}
