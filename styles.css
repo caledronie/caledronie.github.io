@@ -729,3 +729,8 @@ code{
   margin-top: 18px;
   opacity: 0.9;
 }
+/* Contact – descendre la ligne Réseaux */
+#contact .contact-card .muted.small {
+  margin-top: 22px;
+  display: block;
+}
