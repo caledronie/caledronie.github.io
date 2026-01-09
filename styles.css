@@ -644,3 +644,42 @@ code{
 }#contact .contact-grid {
   margin-top: 40px;
 }
+/* ===== CONTACT : cartes + boutons bien lisibles ===== */
+#contact .contact-card {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 22px 26px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* Boutons (CTA) */
+#contact .contact-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff !important;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#contact .contact-cta:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+/* Lien "Itinéraire Google Maps" + réseaux */
+#contact a {
+  text-decoration: none !important;
+}
+
+#contact a:hover {
+  text-decoration: underline !important;
+}
