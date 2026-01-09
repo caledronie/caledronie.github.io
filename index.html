@@ -11,8 +11,11 @@
   <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.png">
   </head>
-
-<body>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" aria-hidden="true">
+  <button class="lightbox-close" type="button" aria-label="Fermer">×</button>
+  <img id="lightbox-img" alt="">
+</div><body>
    <!-- Top bar -->
   <header class="topbar">
     <div class="container topbar__inner">
@@ -175,26 +178,25 @@
   <h2>Galerie</h2>
 
   <div class="gallery-grid">
-    <div class="gallery-item">
+   <div class="gallery-item" data-full="galerie-mission.jpg">
   <img src="galerie-mission.jpg" alt="Mission terrain">
   <span class="badge">Mission terrain</span>
 </div>
 
-    <div class="gallery-item">
-  <img src="galerie-salle.jpeg" alt="Salle de cours">
+<div class="gallery-item" data-full="galerie-salle.jpg">
+  <img src="galerie-salle.jpg" alt="Salle de cours">
   <span class="badge">Salle de cours</span>
 </div>
 
-    <div class="gallery-item">
-  <img src="galerie-simulateur.jpeg" alt="Simulateur">
+<div class="gallery-item" data-full="galerie-simulateur.jpg">
+  <img src="galerie-simulateur.jpg" alt="Simulateur">
   <span class="badge">Simulateur</span>
 </div>
 
-    <div class="gallery-item">
-  <img src="galerie-materiel.jpeg" alt="Matériel">
+<div class="gallery-item" data-full="galerie-materiel.jpg">
+  <img src="galerie-materiel.jpg" alt="Matériel">
   <span class="badge">Matériel</span>
 </div>
-  </div>
 </section>
 
         <p class="tip">
