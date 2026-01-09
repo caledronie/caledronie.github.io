@@ -534,12 +534,14 @@ code{
   padding: 6px 10px;
 }
 /* ===== CONTACT : image de fond ===== */
-.contact-bg {
+#contact.contact-bg {
   background-image: url("contact-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  padding: 80px 0; /* IMPORTANT : donne de la hauteur */
+}
 }
 
 /* voile sombre pour la lisibilité */
