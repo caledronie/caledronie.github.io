@@ -598,3 +598,13 @@ code{
   color: #ffffff !important;
   text-decoration: underline !important;
 }
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+.contact-link svg {
+  flex-shrink: 0;
+}
