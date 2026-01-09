@@ -499,3 +499,37 @@ code{
   object-fit: cover;
   display: block;
 }
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+  padding: 24px;
+}
+
+.lightbox.is-open {
+  display: grid;
+}
+
+.lightbox img {
+  max-width: min(1100px, 95vw);
+  max-height: 85vh;
+  border-radius: 14px;
+  display: block;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 38px;
+  line-height: 1;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  padding: 6px 10px;
+}
