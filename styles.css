@@ -700,3 +700,26 @@ code{
   border-radius: 16px;
   padding: 18px 20px;
 }
+/* CONTACT : lisibilité liens & boutons */
+#contact a{
+  color: #ffffff;
+  font-weight: 500;
+}
+
+#contact a:hover{
+  text-decoration: underline;
+}
+
+/* Boutons contact */
+#contact .btn,
+#contact .btn-outline{
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+}
+
+#contact .btn:hover,
+#contact .btn-outline:hover{
+  background: rgba(0,0,0,0.55);
+}
