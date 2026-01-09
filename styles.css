@@ -756,3 +756,13 @@ code{
   content: "" !important;
   display: none !important;
 }
+.swiper-pagination,
+.swiper-pagination-bullet,
+.splide__pagination,
+.splide__pagination__page,
+.tns-nav,
+.tns-nav button,
+.glide__bullets,
+.glide__bullet {
+  display: none !important;
+}
