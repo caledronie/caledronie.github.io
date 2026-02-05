@@ -118,4 +118,62 @@ setInterval(refresh, 600000);   // météo toutes les 10 min
 setInterval(majHeures, 1000);   // horloges chaque seconde
 </script>
 
+<script>
+(function () {
+  const TIMEZONE = "Pacific/Noumea";
 
+  function tickClocks() {
+    const now = new Date();
+
+    const local = new Intl.DateTimeFormat("fr-FR", {
+      timeZone: TIMEZONE, hour: "2-digit", minute: "2-digit", second: "2-digit"
+    }).format(now);
+
+    const utc = new Intl.DateTimeFormat("fr-FR", {
+      timeZone: "UTC", hour: "2-digit", minute: "2-digit", second: "2-digit"
+    }).format(now);
+
+    const lt = document.getElementById("localTime");
+    const ut = document.getElementById("utcTime");
+    if (lt) lt.textContent = local;
+    if (ut) ut.textContent = utc;
+  }
+
+  async function updateKp() {
+    const kpEl = document.getElementById("kpValue");
+    const kpTimeEl = document.getElementById("kpTime");
+    if (!kpEl || !kpTimeEl) return;
+
+    try {
+      const url = "https://services.swpc.noaa.gov/json/planetary_k_index_1m.json";
+      const r = await fetch(url, { cache: "no-store" });
+      const data = await r.json();
+      const last = data[data.length - 1];
+
+      const kp = last.kp_index ?? last.kp ?? last.estimated_kp;
+      const t  = last.time_tag ?? last.time ?? "";
+
+      kpEl.textContent = (kp ?? "—");
+      kpTimeEl.textContent = "Mise à jour : " + (t || "—");
+    } catch (e) {
+      kpEl.textContent = "—";
+      kpTimeEl.textContent = "Mise à jour : indisponible";
+    }
+  }
+
+  function start() {
+    tickClocks();
+    setInterval(tickClocks, 1000);
+
+    updateKp();
+    setInterval(updateKp, 10 * 60 * 1000);
+  }
+
+  // Lance quand la page est prête
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+})();
+</script>
