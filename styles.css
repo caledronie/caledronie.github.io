@@ -1152,3 +1152,45 @@ header, nav {
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(0,0,0,0.45);
 }
+/* ===== FORCE NAV COLORS (meteo + global) ===== */
+
+/* Liens en haut = gris (on écrase le violet) */
+header a:link,
+header a:visited,
+.topbar a:link,
+.topbar a:visited,
+nav a:link,
+nav a:visited{
+  color: rgba(255,255,255,0.78) !important;
+  text-decoration: none !important;
+}
+
+header a:hover,
+.topbar a:hover,
+nav a:hover{
+  color: rgba(255,255,255,0.95) !important;
+}
+
+/* Bouton Contact = vert */
+header a[href*="contact"],
+header a[href*="#contact"],
+.topbar a[href*="contact"],
+.topbar a[href*="#contact"],
+nav a[href*="contact"],
+nav a[href*="#contact"]{
+  background: linear-gradient(135deg, #8eead5, #b8f28a) !important;
+  color: #0c1414 !important;
+  padding: 10px 18px !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+}
+
+/* Au cas où un style met "purple" via :active/:focus */
+header a:active,
+header a:focus,
+nav a:active,
+nav a:focus{
+  color: rgba(255,255,255,0.95) !important;
+  outline: none !important;
+}
