@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Météo aviation – Caledronie</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="formations.html">Formations</a>
+    <a href="temoignages.html">Témoignages</a>
+    <a href="galerie.html">Galerie</a>
+    <a href="meteo.html">Météo</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<section class="utile-section">
+  <div class="utile-container">
+    <h2>Météo aviation</h2>
+
+    <div class="utile-time-row">
+      <div class="utile-pill">Heure locale (Nouméa) : <strong id="tLocal">--:--:--</strong></div>
+      <div class="utile-pill">Heure UTC : <strong id="tUTC">--:--:--</strong></div>
+      <div class="utile-pill">Indice Kp : <strong id="kpVal">--</strong></div>
+    </div>
+
+    <div class="utile-grid">
+      <div class="utile-card">
+        <h3>NWWM — Nouméa Magenta</h3>
+        <div class="utile-meta">METAR</div>
+        <pre class="utile-pre" id="metarNWWM">Chargement…</pre>
+        <div class="utile-meta" style="margin-top:12px;">TAF</div>
+        <pre class="utile-pre" id="tafNWWM">Chargement…</pre>
+      </div>
+
+      <div class="utile-card">
+        <h3>NWWW — Nouméa La Tontouta</h3>
+        <div class="utile-meta">METAR</div>
+        <pre class="utile-pre" id="metarNWWW">Chargement…</pre>
+        <div class="utile-meta" style="margin-top:12px;">TAF</div>
+        <pre class="utile-pre" id="tafNWWW">Chargement…</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const WORKER = "https://meteo-caledronie.piewic35.workers.dev";
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function updateClocks(){
+  const now = new Date();
+  document.getElementById("tUTC").textContent =
+    `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}`;
+  const noumea = new Intl.DateTimeFormat("fr-FR", {
+    timeZone:"Pacific/Noumea", hour:"2-digit", minute:"2-digit", second:"2-digit"
+  }).format(now);
+  document.getElementById("tLocal").textContent = noumea;
+}
+setInterval(updateClocks, 1000);
+updateClocks();
+
+async function loadText(url, id){
+  try{
+    const r = await fetch(url);
+    const t = await r.text();
+    document.getElementById(id).textContent = t.trim();
+  }catch(e){
+    document.getElementById(id).textContent = "Indisponible";
+  }
+}
+
+async function loadKp(){
+  try{
+    const r = await fetch(`${WORKER}/kp`);
+    const data = await r.json();
+    const last = data[data.length - 1];
+    document.getElementById("kpVal").textContent = last[1];
+  }catch(e){
+    document.getElementById("kpVal").textContent = "--";
+  }
+}
+
+function refresh(){
+  loadText(`${WORKER}/metar?station=NWWM`, "metarNWWM");
+  loadText(`${WORKER}/taf?station=NWWM`, "tafNWWM");
+  loadText(`${WORKER}/metar?station=NWWW`, "metarNWWW");
+  loadText(`${WORKER}/taf?station=NWWW`, "tafNWWW");
+  loadKp();
+}
+refresh();
+setInterval(refresh, 60000);
+</script>
+
+</body>
+</html>
