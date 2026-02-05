@@ -1,133 +1,160 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Météo Aéronautique - Caledronie</title>
-    <link rel="stylesheet" href="styles.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
+<!-- meteo.html (version complète propre) -->
 
-<header class="header">
-    <div class="container nav_container">
-        <a href="index.html" class="brand">
-            <span class="brand__text">
-                <span class="brand__name">Caledronie</span>
-                <span class="brand__tag">Formation drone professionnel</span>
-            </span>
-        </a>
+<section class="meteo-page">
+  <h1>Météo aéronautique</h1>
 
-        <nav class="nav">
-            <a href="index.html#accueil" class="nav__link">Accueil</a>
-            <a href="index.html#formations" class="nav__link">Formations</a>
-            <a href="index.html#temoignages" class="nav__link">Témoignages</a>
-            <a href="index.html#galerie" class="nav__link">Galerie</a>
-            <a href="index.html#apropos" class="nav__link">À propos</a>
-            <a href="meteo.html" class="nav__link">Météo</a>
-            <a href="index.html#contact" class="nav__cta">Contact</a>
-        </nav>
+  <div class="weather-grid">
+    <!-- MAGENTA -->
+    <div class="weather-card glass">
+      <h2>Nouméa Magenta (NWWM)</h2>
+      <pre id="magentaText">Chargement…</pre>
     </div>
-</header>
 
-<main class="section">
-    <div class="container">
-
-        <h1>Météo aéronautique</h1>
-
-        <div class="meteo-grid">
-
-            <div class="meteo-card">
-                <h2>Nouméa Magenta (NWWM)</h2>
-                <pre id="metar-magenta">Chargement METAR...</pre>
-                <pre id="taf-magenta">Chargement TAF...</pre>
-            </div>
-
-            <div class="meteo-card">
-                <h2>Nouméa Tontouta (NWWW)</h2>
-                <pre id="metar-tontouta">Chargement METAR...</pre>
-                <pre id="taf-tontouta">Chargement TAF...</pre>
-            </div>
-
-            <div class="weather-card infos">
-  <h3>Infos utiles</h3>
-
-  <div class="info-row">
-    <span>Heure locale</span>
-    <strong id="localTime">—</strong>
-  </div>
-
-  <div class="info-row">
-    <span>Heure UTC</span>
-    <strong id="utcTime">—</strong>
-  </div>
-
-  <div class="info-row">
-    <span>Indice Kp</span>
-    <strong id="kpValue">—</strong>
-  </div>
-<div class="info-row">
-  <span>Nuit aéronautique</span>
-  <strong id="nightState">—</strong>
-</div>
-<div class="info-sub" id="nightWindow">—</div>
-
-  <div class="info-sub" id="kpTime">Mise à jour : —</div>
-</div>
-        </div>
+    <!-- TONTOUTA -->
+    <div class="weather-card glass">
+      <h2>Nouméa Tontouta (NWWW)</h2>
+      <pre id="tontoutaText">Chargement…</pre>
     </div>
-</main>
+
+    <!-- INFOS UTILES -->
+    <div class="weather-card glass infos">
+      <h2>Infos utiles</h2>
+
+      <div class="info-row">
+        <span>Heure locale</span>
+        <strong id="localTime">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Heure UTC</span>
+        <strong id="utcTime">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Indice Kp</span>
+        <strong id="kpValue">—</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Nuit aéronautique</span>
+        <strong id="aeroNight">—</strong>
+      </div>
+
+      <div class="info-sub" id="aeroNightTimes">—</div>
+      <div class="info-sub" id="kpTime">Mise à jour : —</div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ===== Page ===== */
+.meteo-page{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 18px 40px;
+}
+.meteo-page h1{
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 10px 0 22px;
+  font-weight: 800;
+}
+
+/* ===== Grille ===== */
+.weather-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 980px){
+  .weather-grid{ grid-template-columns: 1fr; }
+}
+
+/* ===== Cartes glassy ===== */
+.glass{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.glass:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.45);
+  border-color: rgba(126,231,216,0.35);
+}
+
+.weather-card{
+  padding: 18px 18px 16px;
+}
+.weather-card h2{
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+/* ===== METAR / TAF ===== */
+.weather-card pre{
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: .92rem;
+  line-height: 1.35;
+  opacity: .95;
+}
+
+/* ===== Infos utiles ===== */
+.infos .info-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+.infos .info-row:last-of-type{ border-bottom:none; }
+.infos span{ opacity: .85; }
+.infos strong{ font-size: 1.05rem; letter-spacing:.3px; }
+.infos .info-sub{
+  margin-top: 10px;
+  font-size: .86rem;
+  opacity: .75;
+}
+</style>
 
 <script>
-const API = "https://meteo-caledronie.piewic35.workers.dev";
-
-async function charger(station, type, elementId) {
-    const r = await fetch(`${API}/${type}?station=${station}`);
-    const t = await r.text();
-    document.getElementById(elementId).textContent = t;
-}
-
-function majHeures() {
-    const now = new Date();
-    document.getElementById("heure-locale").textContent = now.toLocaleTimeString();
-    document.getElementById("heure-utc").textContent = now.toUTCString().split(" ")[4];
-}
-
-async function chargerKp() {
-    const r = await fetch(`${API}/kp`);
-    const j = await r.json();
-    document.getElementById("kp-index").textContent = j.Kp || j.kp || "N/A";
-}
-
-function refresh() {
-  charger("NWWM", "metar", "metar-magenta");
-  charger("NWWM", "taf", "taf-magenta");
-  charger("NWWW", "metar", "metar-tontouta");
-  charger("NWWW", "taf", "taf-tontouta");
-  chargerKp();
-}
-
-function majHeures() {
-  const now = new Date();
-  document.getElementById("heure-local").textContent =
-    now.toLocaleTimeString("fr-FR", { timeZone: "Pacific/Noumea" });
-  document.getElementById("heure-utc").textContent =
-    now.toUTCString().split(" ")[4];
-}
-
-// Chargement initial
-refresh();
-majHeures();
-
-// Mise à jour automatique
-setInterval(refresh, 600000);   // météo toutes les 10 min
-setInterval(majHeures, 1000);   // horloges chaque seconde
-</script>
-
-<script>
-(function () {
+(() => {
+  // ========= CONFIG =========
   const TIMEZONE = "Pacific/Noumea";
 
-  function tickClocks() {
+  // Nuit aéronautique en HORAIRES FIXES (modifiable)
+  const AERO_NIGHT = {
+    tz: TIMEZONE,
+    start: "18:30",
+    end: "05:10"
+  };
+
+  // ⚠️ METAR/TAF : mets ici TES URLs si tu en as déjà.
+  // Si tu n’as pas d’API, tu peux laisser ces fonctions : ça affichera un message propre.
+  const SOURCES = {
+    magenta: null,  // ex: "https://ton-api/metar?icao=NWWM"
+    tontouta: null  // ex: "https://ton-api/metar?icao=NWWW"
+  };
+
+  // ========= OUTILS =========
+  function $(id){ return document.getElementById(id); }
+
+  function toMin(s){
+    const [h,m] = s.split(":").map(Number);
+    return h*60 + m;
+  }
+
+  // ========= HORLOGES =========
+  function tickClocks(){
     const now = new Date();
 
     const local = new Intl.DateTimeFormat("fr-FR", {
@@ -138,18 +165,19 @@ setInterval(majHeures, 1000);   // horloges chaque seconde
       timeZone: "UTC", hour: "2-digit", minute: "2-digit", second: "2-digit"
     }).format(now);
 
-    const lt = document.getElementById("localTime");
-    const ut = document.getElementById("utcTime");
+    const lt = $("localTime");
+    const ut = $("utcTime");
     if (lt) lt.textContent = local;
     if (ut) ut.textContent = utc;
   }
 
-  async function updateKp() {
-    const kpEl = document.getElementById("kpValue");
-    const kpTimeEl = document.getElementById("kpTime");
+  // ========= KP NOAA =========
+  async function updateKp(){
+    const kpEl = $("kpValue");
+    const kpTimeEl = $("kpTime");
     if (!kpEl || !kpTimeEl) return;
 
-    try {
+    try{
       const url = "https://services.swpc.noaa.gov/json/planetary_k_index_1m.json";
       const r = await fetch(url, { cache: "no-store" });
       const data = await r.json();
@@ -160,62 +188,28 @@ setInterval(majHeures, 1000);   // horloges chaque seconde
 
       kpEl.textContent = (kp ?? "—");
       kpTimeEl.textContent = "Mise à jour : " + (t || "—");
-    } catch (e) {
+    }catch(e){
       kpEl.textContent = "—";
       kpTimeEl.textContent = "Mise à jour : indisponible";
     }
   }
 
-  function start() {
-    tickClocks();
-    setInterval(tickClocks, 1000);
-
-    updateKp();
-    setInterval(updateKp, 10 * 60 * 1000);
-  }
-
-  // Lance quand la page est prête
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start);
-  } else {
-    start();
-  }
-})();
-
-<script>
-(() => {
-  const AERO_NIGHT = {
-    tz: "Pacific/Noumea",
-    start: "18:30", // début nuit (heure locale)
-    end: "05:10"    // fin nuit (heure locale)
-  };
-
-  function toMin(s) {
-    const [h, m] = s.split(":").map(Number);
-    return h * 60 + m;
-  }
-
-  function getLocalHHMM() {
-    const now = new Date();
-    return new Intl.DateTimeFormat("fr-FR", {
-      timeZone: AERO_NIGHT.tz,
-      hour: "2-digit",
-      minute: "2-digit"
-    }).format(now);
-  }
-
-  function updateAeroNightFixed() {
-    const stateEl = document.getElementById("aeroNight");
-    const timesEl = document.getElementById("aeroNightTimes");
+  // ========= NUIT AERO (FIXE) =========
+  function updateAeroNightFixed(){
+    const stateEl = $("aeroNight");
+    const timesEl = $("aeroNightTimes");
     if (!stateEl || !timesEl) return;
 
-    const hhmm = getLocalHHMM();
+    const now = new Date();
+    const hhmm = new Intl.DateTimeFormat("fr-FR", {
+      timeZone: AERO_NIGHT.tz, hour: "2-digit", minute: "2-digit"
+    }).format(now);
+
     const nowMin = toMin(hhmm);
     const startMin = toMin(AERO_NIGHT.start);
     const endMin = toMin(AERO_NIGHT.end);
 
     const crossesMidnight = startMin > endMin;
-
     const isNight = crossesMidnight
       ? (nowMin >= startMin || nowMin < endMin)
       : (nowMin >= startMin && nowMin < endMin);
@@ -224,61 +218,54 @@ setInterval(majHeures, 1000);   // horloges chaque seconde
     timesEl.textContent = `Début : ${AERO_NIGHT.start} • Fin : ${AERO_NIGHT.end} (heure locale)`;
   }
 
-  // Lance quand la page est prête (même si ton fichier n'a pas <body>)
-  function start() {
+  // ========= METAR/TAF (placeholder propre) =========
+  async function updateText(id, url, fallback){
+    const el = $(id);
+    if (!el) return;
+
+    if (!url){
+      el.textContent = fallback;
+      return;
+    }
+
+    try{
+      const r = await fetch(url, { cache: "no-store" });
+      const txt = await r.text();
+      el.textContent = txt || fallback;
+    }catch(e){
+      el.textContent = fallback;
+    }
+  }
+
+  function refreshAll(){
+    tickClocks();
+    updateKp();
     updateAeroNightFixed();
+
+    updateText(
+      "magentaText",
+      SOURCES.magenta,
+      "Source METAR/TAF non configurée.\nAjoute l’URL dans le script (SOURCES.magenta)."
+    );
+
+    updateText(
+      "tontoutaText",
+      SOURCES.tontouta,
+      "Source METAR/TAF non configurée.\nAjoute l’URL dans le script (SOURCES.tontouta)."
+    );
+  }
+
+  // ========= GO =========
+  document.addEventListener("DOMContentLoaded", () => {
+    refreshAll();
+    setInterval(tickClocks, 1000);
+    setInterval(updateKp, 10 * 60 * 1000);
     setInterval(updateAeroNightFixed, 60 * 1000);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start);
-  } else {
-    start();
-  }
+    // refresh METAR/TAF si tu as des URLs
+    setInterval(() => {
+      updateText("magentaText", SOURCES.magenta, $("magentaText")?.textContent || "");
+      updateText("tontoutaText", SOURCES.tontouta, $("tontoutaText")?.textContent || "");
+    }, 10 * 60 * 1000);
+  });
 })();
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  const tz = "Pacific/Noumea";
-  const start = "18:30"; // début nuit
-  const end = "05:10";   // fin nuit
-
-  function toMin(s){
-    const [h,m] = s.split(":").map(Number);
-    return h*60 + m;
-  }
-
-  function updateAeroNight(){
-    const stateEl = document.getElementById("aeroNight");
-    const timesEl = document.getElementById("aeroNightTimes");
-    if(!stateEl || !timesEl) return;
-
-    const now = new Date();
-    const hhmm = new Intl.DateTimeFormat("fr-FR", {
-      timeZone: tz,
-      hour: "2-digit",
-      minute: "2-digit"
-    }).format(now);
-
-    const nowMin = toMin(hhmm);
-    const startMin = toMin(start);
-    const endMin = toMin(end);
-
-    const crossesMidnight = startMin > endMin;
-
-    const isNight = crossesMidnight
-      ? (nowMin >= startMin || nowMin < endMin)
-      : (nowMin >= startMin && nowMin < endMin);
-
-    stateEl.textContent = isNight ? "NUIT" : "JOUR";
-    timesEl.textContent = `Début : ${start} • Fin : ${end} (heure locale)`;
-  }
-
-  updateAeroNight();
-  setInterval(updateAeroNight, 60000);
-});
-</script>
-<script>
-alert("TEST SCRIPT OK");
 </script>
