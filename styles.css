@@ -1014,3 +1014,106 @@ header, nav {
     grid-template-columns: 1fr;
   }
 }
+/* ===== METEO : même déco que l’accueil (glassy + glow) ===== */
+
+.meteo-page{
+  padding: 48px 0 80px;
+}
+
+/* Titre gros + léger glow comme la home */
+.meteo-page h1{
+  font-size: clamp(42px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin: 10px 0 26px;
+  text-shadow: 0 10px 40px rgba(0,0,0,.55);
+}
+
+/* Grille 2 cartes + infos à droite */
+.weather-grid{
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 420px !important;
+  gap: 22px !important;
+  align-items: start !important;
+}
+
+@media (max-width: 1100px){
+  .weather-grid{ grid-template-columns: 1fr !important; }
+}
+
+/* Cartes “verre” comme sur l’accueil */
+.weather-card{
+  border-radius: 18px !important;
+  padding: 22px 24px !important;
+}
+
+.glass{
+  background: rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 18px 55px rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* petit glow “mint” */
+.glass::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(600px 120px at 20% 0%, rgba(126,231,216,0.18), transparent 55%);
+  pointer-events:none;
+}
+
+.weather-card:hover{
+  transform: translateY(-3px);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.weather-card:hover.glass{
+  border-color: rgba(126,231,216,0.30) !important;
+  box-shadow: 0 26px 70px rgba(0,0,0,0.55) !important;
+}
+
+/* Titres cartes */
+.weather-card h2{
+  font-size: 20px !important;
+  margin: 0 0 12px !important;
+  font-weight: 800 !important;
+}
+
+/* METAR/TAF monospace propre */
+.weather-card pre{
+  margin: 0 !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+  opacity: .95 !important;
+}
+
+/* Infos utiles : lignes comme la home */
+.infos .info-row{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:baseline !important;
+  gap: 14px !important;
+  padding: 12px 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
+}
+.infos .info-row:last-of-type{ border-bottom: none !important; }
+
+.infos span{ opacity: .85 !important; }
+.infos strong{
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  letter-spacing: .2px !important;
+}
+
+/* Petites lignes en bas (début/fin/màj) */
+.infos .info-sub{
+  margin-top: 10px !important;
+  font-size: 13px !important;
+  opacity: .75 !important;
+}
