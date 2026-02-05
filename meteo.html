@@ -95,17 +95,151 @@ async function updateKp(){
 }
 updateKp(); setInterval(updateKp,600000);
 
-const start="18:30", end="05:10";
-function toMin(t){let[h,m]=t.split(":").map(Number);return h*60+m;}
-function updateNight(){
-  const now = new Date();
-  const hhmm=new Intl.DateTimeFormat("fr-FR",{timeZone:TIMEZONE,hour:"2-digit",minute:"2-digit"}).format(now);
-  const n=toMin(hhmm), s=toMin(start), e=toMin(end);
-  const night=s>e?(n>=s||n<e):(n>=s&&n<e);
-  document.getElementById("aeroNight").textContent = night?"NUIT":"JOUR";
-  document.getElementById("aeroNightTimes").textContent = `Début : ${start} • Fin : ${end}`;
+/* ===== NUIT AÉRONAUTIQUE (soleil -12°) - Nouméa (NOU) ===== */
+const AERO_CFG = {
+  tz: "Pacific/Noumea",
+  lat: -22.2758,   // Nouméa
+  lon: 166.4580,   // Nouméa
+  sunAltDeg: -12   // nuit aéronautique = soleil à -12°
+};
+
+// Nouméa: UTC+11 (pas de DST)
+const TZ_OFFSET_HOURS = 11;
+
+function deg2rad(d){ return d * Math.PI / 180; }
+function rad2deg(r){ return r * 180 / Math.PI; }
+
+function dayOfYearUTC(date){
+  const start = Date.UTC(date.getUTCFullYear(), 0, 1);
+  const now = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  return Math.floor((now - start) / 86400000) + 1;
 }
-updateNight(); setInterval(updateNight,60000);
+
+// Algorithme NOAA (approx très utilisée) : equation du temps + declinaison + angle horaire
+function computeSunEventMinutesLocal(dateUTC, lat, lon, tzOffsetHours, sunAltitudeDeg){
+  const N = dayOfYearUTC(dateUTC);
+  const gamma = 2 * Math.PI / 365 * (N - 1 + (12 - 12) / 24); // à midi approx
+
+  const eqtime = 229.18 * (
+    0.000075 +
+    0.001868 * Math.cos(gamma) -
+    0.032077 * Math.sin(gamma) -
+    0.014615 * Math.cos(2 * gamma) -
+    0.040849 * Math.sin(2 * gamma)
+  );
+
+  const decl = (
+    0.006918 -
+    0.399912 * Math.cos(gamma) +
+    0.070257 * Math.sin(gamma) -
+    0.006758 * Math.cos(2 * gamma) +
+    0.000907 * Math.sin(2 * gamma) -
+    0.002697 * Math.cos(3 * gamma) +
+    0.00148  * Math.sin(3 * gamma)
+  );
+
+  const latRad = deg2rad(lat);
+
+  // altitude -> zenith
+  const zenithDeg = 90 - sunAltitudeDeg; // ex: -12 => 102
+  const zenithRad = deg2rad(zenithDeg);
+
+  const cosH =
+    (Math.cos(zenithRad) - Math.sin(latRad) * Math.sin(decl)) /
+    (Math.cos(latRad) * Math.cos(decl));
+
+  // sécurité (pas de cas polaire à Nouméa, mais on clamp)
+  const cosHc = Math.min(1, Math.max(-1, cosH));
+  const H = Math.acos(cosHc);           // radians
+  const Hdeg = rad2deg(H);              // degrés
+
+  // midi solaire en minutes locales
+  const solarNoonMin =
+    720 - 4 * lon - eqtime + tzOffsetHours * 60;
+
+  // événement : matin = noon - 4*Hdeg, soir = noon + 4*Hdeg
+  const morningMin = solarNoonMin - 4 * Hdeg;
+  const eveningMin = solarNoonMin + 4 * Hdeg;
+
+  return { morningMin, eveningMin };
+}
+
+function minToHHMM(min){
+  // normalise sur 0..1439
+  let m = Math.round(min) % 1440;
+  if (m < 0) m += 1440;
+  const hh = String(Math.floor(m / 60)).padStart(2, "0");
+  const mm = String(m % 60).padStart(2, "0");
+  return `${hh}:${mm}`;
+}
+
+function getLocalHHMM(){
+  const now = new Date();
+  return new Intl.DateTimeFormat("fr-FR", {
+    timeZone: AERO_CFG.tz,
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(now);
+}
+
+let lastAeroDayKey = null;
+let aeroStartHHMM = null;
+let aeroEndHHMM = null;
+
+function computeAeroTimesForToday(){
+  // Date "aujourd’hui" en UTC (jour courant)
+  const now = new Date();
+  const dayKey = new Intl.DateTimeFormat("fr-FR", { timeZone: AERO_CFG.tz, year:"numeric", month:"2-digit", day:"2-digit" }).format(now);
+  if (dayKey === lastAeroDayKey && aeroStartHHMM && aeroEndHHMM) return;
+
+  lastAeroDayKey = dayKey;
+
+  // On prend un Date UTC "aujourd’hui" (la formule utilise le jour UTC, suffisant ici)
+  const dUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+  const { morningMin, eveningMin } = computeSunEventMinutesLocal(
+    dUTC,
+    AERO_CFG.lat,
+    AERO_CFG.lon,
+    TZ_OFFSET_HOURS,
+    AERO_CFG.sunAltDeg
+  );
+
+  // soir = début nuit aero, matin = fin nuit aero
+  aeroStartHHMM = minToHHMM(eveningMin);
+  aeroEndHHMM = minToHHMM(morningMin);
+}
+
+function toMin(hhmm){
+  const [h,m] = hhmm.split(":").map(Number);
+  return h*60 + m;
+}
+
+function updateAeroNight(){
+  computeAeroTimesForToday();
+
+  const stateEl = document.getElementById("aeroNight");
+  const timesEl = document.getElementById("aeroNightTimes");
+  if (!stateEl || !timesEl) return;
+
+  const nowHHMM = getLocalHHMM();
+  const nowMin = toMin(nowHHMM);
+  const startMin = toMin(aeroStartHHMM);
+  const endMin = toMin(aeroEndHHMM);
+
+  const crossesMidnight = startMin > endMin;
+  const isNight = crossesMidnight
+    ? (nowMin >= startMin || nowMin < endMin)
+    : (nowMin >= startMin && nowMin < endMin);
+
+  stateEl.textContent = isNight ? "NUIT" : "JOUR";
+  timesEl.textContent = `Début : ${aeroStartHHMM} • Fin : ${aeroEndHHMM} (soleil −12°)`;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateAeroNight();
+  setInterval(updateAeroNight, 60 * 1000);
+});
 </script>
 </div>
 <script>
