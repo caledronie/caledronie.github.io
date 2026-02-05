@@ -882,3 +882,11 @@ header, nav {
 .weather-card pre{white-space:pre-wrap;font-family:monospace;font-size:.9rem;}
 .infos .info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.1);}
 .infos .info-sub{font-size:.85rem;opacity:.8;margin-top:6px;}
+.meteo-page{padding:40px 20px;}
+.weather-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.weather-card{padding:20px;border-radius:16px;}
+.glass{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);}
+.weather-card h2{margin-bottom:10px;}
+.weather-card pre{white-space:pre-wrap;font-family:monospace;font-size:.9rem;}
+.infos .info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.1);}
+.infos .info-sub{font-size:.85rem;opacity:.8;margin-top:6px;}
