@@ -771,4 +771,27 @@ code{
 }
 .dot {
   display: none;
+}.meteo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.meteo-card {
+    background: #111;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #222;
+}
+
+.meteo-card h2 {
+    margin-bottom: 10px;
+    color: #8be9fd;
+}
+
+.meteo-card pre {
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 14px;
 }
