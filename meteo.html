@@ -1,193 +1,102 @@
-<!-- meteo.html (version complète propre) -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Météo aéronautique | Caledronie</title>
 
-<section class="meteo-page">
+  <!-- EXACTEMENT le même style que le site -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- ===== MENU IDENTIQUE AU SITE ===== -->
+<header class="topbar">
+  <div class="container topbar_inner">
+    <a class="brand" href="index.html" aria-label="Retour à l'accueil">
+      <img src="logo.jpg" alt="Caledronie" class="brand_logo">
+      <span class="brand_text">
+        <span class="brand_name">Caledronie</span>
+        <span class="brand_tag">Formation drone professionnel</span>
+      </span>
+    </a>
+
+    <nav class="nav">
+      <a href="index.html#formations">Formations</a>
+      <a href="index.html#temoignages">Témoignages</a>
+      <a href="index.html#galerie">Galerie</a>
+      <a href="index.html#apropos">À propos</a>
+      <a href="meteo.html" class="active">Météo</a>
+      <a href="index.html#contact" class="btn_contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== CONTENU METEO ===== -->
+<main class="container meteo-page">
   <h1>Météo aéronautique</h1>
 
   <div class="weather-grid">
-    <!-- MAGENTA -->
+
     <div class="weather-card glass">
       <h2>Nouméa Magenta (NWWM)</h2>
-      <pre id="magentaText">Chargement…</pre>
+      <pre id="magentaText">METAR / TAF à venir…</pre>
     </div>
 
-    <!-- TONTOUTA -->
     <div class="weather-card glass">
       <h2>Nouméa Tontouta (NWWW)</h2>
-      <pre id="tontoutaText">Chargement…</pre>
+      <pre id="tontoutaText">METAR / TAF à venir…</pre>
     </div>
 
-    <!-- INFOS UTILES -->
     <div class="weather-card glass infos">
       <h2>Infos utiles</h2>
 
-      <div class="info-row">
-        <span>Heure locale</span>
-        <strong id="localTime">—</strong>
-      </div>
-
-      <div class="info-row">
-        <span>Heure UTC</span>
-        <strong id="utcTime">—</strong>
-      </div>
-
-      <div class="info-row">
-        <span>Indice Kp</span>
-        <strong id="kpValue">—</strong>
-      </div>
-
-      <div class="info-row">
-        <span>Nuit aéronautique</span>
-        <strong id="aeroNight">—</strong>
-      </div>
+      <div class="info-row"><span>Heure locale</span><strong id="localTime">—</strong></div>
+      <div class="info-row"><span>Heure UTC</span><strong id="utcTime">—</strong></div>
+      <div class="info-row"><span>Indice Kp</span><strong id="kpValue">—</strong></div>
+      <div class="info-row"><span>Nuit aéronautique</span><strong id="aeroNight">—</strong></div>
 
       <div class="info-sub" id="aeroNightTimes">—</div>
       <div class="info-sub" id="kpTime">Mise à jour : —</div>
     </div>
+
   </div>
-</section>
+</main>
 
-
-
+<!-- ===== SCRIPT METEO ===== -->
 <script>
-(() => {
-  // ========= CONFIG =========
-  const TIMEZONE = "Pacific/Noumea";
+const TIMEZONE = "Pacific/Noumea";
 
-  // Nuit aéronautique en HORAIRES FIXES (modifiable)
-  const AERO_NIGHT = {
-    tz: TIMEZONE,
-    start: "18:30",
-    end: "05:10"
-  };
+function updateClocks(){
+  const now = new Date();
+  localTime.textContent = new Intl.DateTimeFormat("fr-FR",{timeZone:TIMEZONE,hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(now);
+  utcTime.textContent = new Intl.DateTimeFormat("fr-FR",{timeZone:"UTC",hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(now);
+}
+setInterval(updateClocks,1000); updateClocks();
 
-  // ⚠️ METAR/TAF : mets ici TES URLs si tu en as déjà.
-  // Si tu n’as pas d’API, tu peux laisser ces fonctions : ça affichera un message propre.
-  const SOURCES = {
-    magenta: null,  // ex: "https://ton-api/metar?icao=NWWM"
-    tontouta: null  // ex: "https://ton-api/metar?icao=NWWW"
-  };
+async function updateKp(){
+  try{
+    const r = await fetch("https://services.swpc.noaa.gov/json/planetary_k_index_1m.json");
+    const d = await r.json(); const last = d[d.length-1];
+    kpValue.textContent = last.kp_index ?? "—";
+    kpTime.textContent = "Mise à jour : " + (last.time_tag ?? "");
+  }catch{ kpValue.textContent="—"; }
+}
+updateKp(); setInterval(updateKp,600000);
 
-  // ========= OUTILS =========
-  function $(id){ return document.getElementById(id); }
-
-  function toMin(s){
-    const [h,m] = s.split(":").map(Number);
-    return h*60 + m;
-  }
-
-  // ========= HORLOGES =========
-  function tickClocks(){
-    const now = new Date();
-
-    const local = new Intl.DateTimeFormat("fr-FR", {
-      timeZone: TIMEZONE, hour: "2-digit", minute: "2-digit", second: "2-digit"
-    }).format(now);
-
-    const utc = new Intl.DateTimeFormat("fr-FR", {
-      timeZone: "UTC", hour: "2-digit", minute: "2-digit", second: "2-digit"
-    }).format(now);
-
-    const lt = $("localTime");
-    const ut = $("utcTime");
-    if (lt) lt.textContent = local;
-    if (ut) ut.textContent = utc;
-  }
-
-  // ========= KP NOAA =========
-  async function updateKp(){
-    const kpEl = $("kpValue");
-    const kpTimeEl = $("kpTime");
-    if (!kpEl || !kpTimeEl) return;
-
-    try{
-      const url = "https://services.swpc.noaa.gov/json/planetary_k_index_1m.json";
-      const r = await fetch(url, { cache: "no-store" });
-      const data = await r.json();
-      const last = data[data.length - 1];
-
-      const kp = last.kp_index ?? last.kp ?? last.estimated_kp;
-      const t  = last.time_tag ?? last.time ?? "";
-
-      kpEl.textContent = (kp ?? "—");
-      kpTimeEl.textContent = "Mise à jour : " + (t || "—");
-    }catch(e){
-      kpEl.textContent = "—";
-      kpTimeEl.textContent = "Mise à jour : indisponible";
-    }
-  }
-
-  // ========= NUIT AERO (FIXE) =========
-  function updateAeroNightFixed(){
-    const stateEl = $("aeroNight");
-    const timesEl = $("aeroNightTimes");
-    if (!stateEl || !timesEl) return;
-
-    const now = new Date();
-    const hhmm = new Intl.DateTimeFormat("fr-FR", {
-      timeZone: AERO_NIGHT.tz, hour: "2-digit", minute: "2-digit"
-    }).format(now);
-
-    const nowMin = toMin(hhmm);
-    const startMin = toMin(AERO_NIGHT.start);
-    const endMin = toMin(AERO_NIGHT.end);
-
-    const crossesMidnight = startMin > endMin;
-    const isNight = crossesMidnight
-      ? (nowMin >= startMin || nowMin < endMin)
-      : (nowMin >= startMin && nowMin < endMin);
-
-    stateEl.textContent = isNight ? "NUIT" : "JOUR";
-    timesEl.textContent = `Début : ${AERO_NIGHT.start} • Fin : ${AERO_NIGHT.end} (heure locale)`;
-  }
-
-  // ========= METAR/TAF (placeholder propre) =========
-  async function updateText(id, url, fallback){
-    const el = $(id);
-    if (!el) return;
-
-    if (!url){
-      el.textContent = fallback;
-      return;
-    }
-
-    try{
-      const r = await fetch(url, { cache: "no-store" });
-      const txt = await r.text();
-      el.textContent = txt || fallback;
-    }catch(e){
-      el.textContent = fallback;
-    }
-  }
-
-  function refreshAll(){
-    tickClocks();
-    updateKp();
-    updateAeroNightFixed();
-
-    updateText(
-      "magentaText",
-      SOURCES.magenta,
-      "Source METAR/TAF non configurée.\nAjoute l’URL dans le script (SOURCES.magenta)."
-    );
-
-    updateText(
-      "tontoutaText",
-      SOURCES.tontouta,
-      "Source METAR/TAF non configurée.\nAjoute l’URL dans le script (SOURCES.tontouta)."
-    );
-  }
-
-  // ========= GO =========
-  document.addEventListener("DOMContentLoaded", () => {
-    refreshAll();
-    setInterval(tickClocks, 1000);
-    setInterval(updateKp, 10 * 60 * 1000);
-    setInterval(updateAeroNightFixed, 60 * 1000);
-    // refresh METAR/TAF si tu as des URLs
-    setInterval(() => {
-      updateText("magentaText", SOURCES.magenta, $("magentaText")?.textContent || "");
-      updateText("tontoutaText", SOURCES.tontouta, $("tontoutaText")?.textContent || "");
-    }, 10 * 60 * 1000);
-  });
-})();
+const start="18:30", end="05:10";
+function toMin(t){let[h,m]=t.split(":").map(Number);return h*60+m;}
+function updateNight(){
+  const now = new Date();
+  const hhmm=new Intl.DateTimeFormat("fr-FR",{timeZone:TIMEZONE,hour:"2-digit",minute:"2-digit"}).format(now);
+  const n=toMin(hhmm), s=toMin(start), e=toMin(end);
+  const night=s>e?(n>=s||n<e):(n>=s&&n<e);
+  aeroNight.textContent = night?"NUIT":"JOUR";
+  aeroNightTimes.textContent = `Début : ${start} • Fin : ${end}`;
+}
+updateNight(); setInterval(updateNight,60000);
 </script>
+
+</body>
+</html>
