@@ -113,12 +113,12 @@ updateNight(); setInterval(updateNight,60000);
 /* ===== METAR + TAF (CORS-safe) ===== */
 const METEO_SOURCES = {
   magenta: {
-    metar: "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT",
-    taf:   "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"
+    metar: "https://api.met.no/weatherapi/tafmetar/1.0/metar.txt?icao=NWWM",
+    taf:   "https://api.met.no/weatherapi/tafmetar/1.0/taf.txt?icao=NWWM"
   },
   tontouta: {
-    metar: "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT",
-    taf:   "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"
+    metar: "https://api.met.no/weatherapi/tafmetar/1.0/metar.txt?icao=NWWW",
+    taf:   "https://api.met.no/weatherapi/tafmetar/1.0/taf.txt?icao=NWWW"
   }
 };
 
