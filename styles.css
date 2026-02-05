@@ -899,3 +899,66 @@ header, nav {
   #siteNav { display:none; flex-direction:column; align-items:flex-start; gap:12px; padding-top:12px; }
   #siteNav.is-open { display:flex; }
 }
+/* ====== METEO PAGE STYLE ====== */
+
+.meteo-page h1 {
+  font-size: 48px;
+  margin-bottom: 30px;
+  letter-spacing: -1px;
+}
+
+/* Grille comme l’accueil */
+.meteo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Cartes effet verre */
+.meteo-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 22px 24px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  transition: 0.3s ease;
+}
+
+.meteo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.55);
+}
+
+.meteo-card h2 {
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+/* Texte METAR */
+.meteo-card pre {
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #eaeaea;
+}
+
+/* Bloc infos à droite */
+.meteo-infos .info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.meteo-infos strong {
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .meteo-grid {
+    grid-template-columns: 1fr;
+  }
+}
