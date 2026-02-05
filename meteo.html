@@ -108,3 +108,55 @@ function updateNight(){
 updateNight(); setInterval(updateNight,60000);
 </script>
 </div>
+<script>
+/* ===== METAR + TAF (NWWM / NWWW) ===== */
+const METEO_SOURCES = {
+  magenta: {
+    metar: "https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT",
+    taf:   "https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"
+  },
+  tontouta: {
+    metar: "https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT",
+    taf:   "https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"
+  }
+};
+
+async function fetchTxt(url){
+  const r = await fetch(url, { cache: "no-store" });
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.text();
+}
+
+function cleanNOAA(txt){
+  // Les fichiers NOAA ont souvent une ligne date en 1ère ligne
+  const lines = (txt || "").trim().split("\n");
+  if (lines.length >= 2 && /^\d{4}\/\d{2}\/\d{2}/.test(lines[0].trim())) {
+    return lines.slice(1).join("\n").trim();
+  }
+  return lines.join("\n").trim();
+}
+
+async function updateMetarTaf(){
+  try{
+    const [mMetar, mTaf, tMetar, tTaf] = await Promise.all([
+      fetchTxt(METEO_SOURCES.magenta.metar),
+      fetchTxt(METEO_SOURCES.magenta.taf),
+      fetchTxt(METEO_SOURCES.tontouta.metar),
+      fetchTxt(METEO_SOURCES.tontouta.taf),
+    ]);
+
+    const magenta = `METAR\n${cleanNOAA(mMetar)}\n\nTAF\n${cleanNOAA(mTaf)}`;
+    const tontouta = `METAR\n${cleanNOAA(tMetar)}\n\nTAF\n${cleanNOAA(tTaf)}`;
+
+    document.getElementById("magentaText").textContent = magenta || "Indisponible";
+    document.getElementById("tontoutaText").textContent = tontouta || "Indisponible";
+  } catch(e){
+    document.getElementById("magentaText").textContent = "METAR / TAF indisponible";
+    document.getElementById("tontoutaText").textContent = "METAR / TAF indisponible";
+    console.error(e);
+  }
+}
+
+updateMetarTaf();
+setInterval(updateMetarTaf, 10 * 60 * 1000); // refresh toutes les 10 minutes
+</script>
