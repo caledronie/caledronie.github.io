@@ -2,8 +2,45 @@
 
 <link rel="stylesheet" href="styles.css">
 <div class="container">
-  
-<section class="meteo-page container">
+  <header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="index.html#accueil" aria-label="Retour à l'accueil">
+      <img src="logo.jpg" alt="Caledronie" class="brand__logo">
+      <span class="brand__text">
+        <span class="brand__name">Caledronie</span>
+        <span class="brand__tag">Formation drone professionnel</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" type="button">
+      ☰
+    </button>
+
+    <nav class="nav" id="siteNav">
+      <a href="index.html#accueil">Accueil</a>
+      <a href="index.html#formations">Formations</a>
+      <a href="index.html#temoignages">Témoignages</a>
+      <a href="index.html#galerie">Galerie</a>
+      <a href="index.html#apropos">À propos</a>
+      <a href="meteo.html" aria-current="page">Météo</a>
+      <a href="index.html#contact" class="btn">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+(() => {
+  const burger = document.getElementById("burger");
+  const nav = document.getElementById("siteNav");
+  if (!burger || !nav) return;
+
+  burger.addEventListener("click", () => {
+    const open = nav.classList.toggle("is-open");
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+})();
+</script>
+  <section class="meteo-page container">
   <h1>Météo aéronautique</h1>
 
   <div class="weather-grid">
