@@ -1117,3 +1117,38 @@ header, nav {
   font-size: 13px !important;
   opacity: .75 !important;
 }
+/* ===== FIX COULEUR MENU METEO ===== */
+
+/* Liens du menu = gris comme le reste du site */
+.topbar nav a,
+.topbar .nav a,
+.topbar a{
+  color: #cfcfcf !important;
+  opacity: 0.9;
+}
+
+.topbar nav a:hover,
+.topbar .nav a:hover,
+.topbar a:hover{
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+/* Bouton Contact vert comme sur l’accueil */
+.topbar .contact-btn,
+.topbar a.contact,
+.topbar a[href*="contact"]{
+  background: linear-gradient(135deg, #7ee7d8, #9be15d) !important;
+  color: #0f1a1a !important;
+  padding: 10px 18px !important;
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+.topbar .contact-btn:hover,
+.topbar a.contact:hover,
+.topbar a[href*="contact"]:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+}
