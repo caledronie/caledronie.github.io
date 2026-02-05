@@ -1,40 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Météo aéronautique | Caledronie</title>
-
-  <!-- EXACTEMENT le même style que le site -->
-  <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-
-<!-- ===== MENU IDENTIQUE AU SITE ===== -->
-<header class="topbar">
-  <div class="container topbar_inner">
-    <a class="brand" href="index.html" aria-label="Retour à l'accueil">
-      <img src="logo.jpg" alt="Caledronie" class="brand_logo">
-      <span class="brand_text">
-        <span class="brand_name">Caledronie</span>
-        <span class="brand_tag">Formation drone professionnel</span>
-      </span>
-    </a>
-
-    <nav class="nav">
-      <a href="index.html#formations">Formations</a>
-      <a href="index.html#temoignages">Témoignages</a>
-      <a href="index.html#galerie">Galerie</a>
-      <a href="index.html#apropos">À propos</a>
-      <a href="meteo.html" class="active">Météo</a>
-      <a href="index.html#contact" class="btn_contact">Contact</a>
-    </nav>
-  </div>
-</header>
-
-<!-- ===== CONTENU METEO ===== -->
-<main class="container meteo-page">
+<section class="meteo-page container">
   <h1>Météo aéronautique</h1>
 
   <div class="weather-grid">
@@ -62,26 +26,30 @@
     </div>
 
   </div>
-</main>
+</section>
 
-<!-- ===== SCRIPT METEO ===== -->
 <script>
 const TIMEZONE = "Pacific/Noumea";
 
 function updateClocks(){
   const now = new Date();
-  localTime.textContent = new Intl.DateTimeFormat("fr-FR",{timeZone:TIMEZONE,hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(now);
-  utcTime.textContent = new Intl.DateTimeFormat("fr-FR",{timeZone:"UTC",hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(now);
+  document.getElementById("localTime").textContent =
+    new Intl.DateTimeFormat("fr-FR",{timeZone:TIMEZONE,hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(now);
+  document.getElementById("utcTime").textContent =
+    new Intl.DateTimeFormat("fr-FR",{timeZone:"UTC",hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(now);
 }
 setInterval(updateClocks,1000); updateClocks();
 
 async function updateKp(){
   try{
     const r = await fetch("https://services.swpc.noaa.gov/json/planetary_k_index_1m.json");
-    const d = await r.json(); const last = d[d.length-1];
-    kpValue.textContent = last.kp_index ?? "—";
-    kpTime.textContent = "Mise à jour : " + (last.time_tag ?? "");
-  }catch{ kpValue.textContent="—"; }
+    const d = await r.json();
+    const last = d[d.length-1];
+    document.getElementById("kpValue").textContent = last.kp_index ?? "—";
+    document.getElementById("kpTime").textContent = "Mise à jour : " + (last.time_tag ?? "");
+  }catch{
+    document.getElementById("kpValue").textContent="—";
+  }
 }
 updateKp(); setInterval(updateKp,600000);
 
@@ -92,11 +60,8 @@ function updateNight(){
   const hhmm=new Intl.DateTimeFormat("fr-FR",{timeZone:TIMEZONE,hour:"2-digit",minute:"2-digit"}).format(now);
   const n=toMin(hhmm), s=toMin(start), e=toMin(end);
   const night=s>e?(n>=s||n<e):(n>=s&&n<e);
-  aeroNight.textContent = night?"NUIT":"JOUR";
-  aeroNightTimes.textContent = `Début : ${start} • Fin : ${end}`;
+  document.getElementById("aeroNight").textContent = night?"NUIT":"JOUR";
+  document.getElementById("aeroNightTimes").textContent = `Début : ${start} • Fin : ${end}`;
 }
 updateNight(); setInterval(updateNight,60000);
 </script>
-
-</body>
-</html>
