@@ -112,13 +112,14 @@ updateNight(); setInterval(updateNight,60000);
 /* ===== METAR + TAF (NWWM / NWWW) ===== */
 const METEO_SOURCES = {
   magenta: {
-    metar: "https://aviationweather.gov/api/data/metar?ids=NWWM&format=raw",
-    taf:   "https://aviationweather.gov/api/data/taf?ids=NWWM&format=raw"
+    metar: "https://api.met.no/weatherapi/tafmetar/1.0/metar.txt?icao=NWWM",
+    taf:   "https://api.met.no/weatherapi/tafmetar/1.0/taf.txt?icao=NWWM"
   },
   tontouta: {
-    metar: "https://aviationweather.gov/api/data/metar?ids=NWWW&format=raw",
-    taf:   "https://aviationweather.gov/api/data/taf?ids=NWWW&format=raw"
+    metar: "https://api.met.no/weatherapi/tafmetar/1.0/metar.txt?icao=NWWW",
+    taf:   "https://api.met.no/weatherapi/tafmetar/1.0/taf.txt?icao=NWWW"
   }
+};
 };
 };
 };
@@ -130,12 +131,8 @@ async function fetchTxt(url){
 }
 
 function cleanNOAA(txt){
-  // Les fichiers NOAA ont souvent une ligne date en 1ère ligne
-  const lines = (txt || "").trim().split("\n");
-  if (lines.length >= 2 && /^\d{4}\/\d{2}\/\d{2}/.test(lines[0].trim())) {
-    return lines.slice(1).join("\n").trim();
-  }
-  return lines.join("\n").trim();
+  return (txt || "").trim();
+
 }
 
 async function updateMetarTaf(){
