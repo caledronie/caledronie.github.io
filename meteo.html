@@ -113,12 +113,12 @@ updateNight(); setInterval(updateNight,60000);
 /* ===== METAR + TAF (CORS-safe) ===== */
 const METEO_SOURCES = {
   magenta: {
-    metar: "https://aviationweather.gov/api/data/metar?ids=NWWM&format=raw",
-    taf:   "https://aviationweather.gov/api/data/taf?ids=NWWM&format=raw"
+    metar: "https://metar.vatsim.net/metar/NWWM",
+    taf:   "https://metar.vatsim.net/taf/NWWM",
   },
   tontouta: {
-    metar: "https://aviationweather.gov/api/data/metar?ids=NWWW&format=raw",
-    taf:   "https://aviationweather.gov/api/data/taf?ids=NWWW&format=raw"
+    metar: "https://metar.vatsim.net/metar/NWWW",
+    taf:   "https://metar.vatsim.net/taf/NWWW",
   }
 };
 
