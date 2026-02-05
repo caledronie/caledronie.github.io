@@ -48,13 +48,26 @@
                 <pre id="taf-tontouta">Chargement TAF...</pre>
             </div>
 
-            <div class="meteo-card">
-                <h2>Infos utiles</h2>
-                <p>Heure locale : <span id="heure-locale"></span></p>
-                <p>Heure UTC : <span id="heure-utc"></span></p>
-                <p>Indice Kp : <span id="kp-index">Chargement...</span></p>
-            </div>
+            <div class="weather-card infos">
+  <h3>Infos utiles</h3>
 
+  <div class="info-row">
+    <span>Heure locale</span>
+    <strong id="localTime">—</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Heure UTC</span>
+    <strong id="utcTime">—</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Indice Kp</span>
+    <strong id="kpValue">—</strong>
+  </div>
+
+  <div class="info-sub" id="kpTime">Mise à jour : —</div>
+</div>
         </div>
     </div>
 </main>
