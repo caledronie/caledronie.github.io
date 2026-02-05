@@ -110,74 +110,80 @@ updateNight(); setInterval(updateNight,60000);
 </div>
 <script>
 /* ===== METAR + TAF (NWWM / NWWW) ===== */
-/* ===== METAR + TAF (CORS-safe) ===== */
+
 const METEO_SOURCES = {
   magenta: {
-    metar: "https://metar.vatsim.net/metar/NWWM",
-    taf:   "https://metar.vatsim.net/taf/NWWM",
+    metar: [
+      "https://metar.vatsim.net/metar/NWWM",
+      "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT"
+    ],
+    taf: [
+      "https://metar.vatsim.net/taf/NWWM",
+      "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"
+    ]
   },
   tontouta: {
-    metar: "https://metar.vatsim.net/metar/NWWW",
-    taf:   "https://metar.vatsim.net/taf/NWWW",
+    metar: [
+      "https://metar.vatsim.net/metar/NWWW",
+      "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT"
+    ],
+    taf: [
+      "https://metar.vatsim.net/taf/NWWW",
+      "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"
+    ]
   }
 };
 
-async function fetchTxt(url){
-  const candidates = [
-    url,
-    "https://r.jina.ai/http://" + url.replace(/^https?:\/\//, "")
-  ];
-
-  let lastErr = null;
-
-  for (const u of candidates) {
-    try {
-      const r = await fetch(u, { cache: "no-store" });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      const t = await r.text();
-      if (t && t.trim().length > 0) return t;
-      throw new Error("EMPTY");
-    } catch (e) {
-      lastErr = e;
-    }
-  }
-
-  throw lastErr || new Error("fetch failed");
+async function fetchTxt(url) {
+  const r = await fetch(url, { cache: "no-store" });
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return (await r.text()).trim();
 }
 
-function cleanNOAA(txt){
-  const lines = (txt || "").trim().split("\n");
-  // NOAA met souvent une ligne date en 1ère ligne (2026/02/05 ...)
-  if (lines.length >= 2 && /^\d{4}\/\d{2}\/\d{2}/.test(lines[0].trim())) {
-    return lines.slice(1).join("\n").trim();
-  }
+function cleanTxt(txt) {
+  const lines = (txt || "").split("\n").map(l => l.replace(/\r/g, ""));
+  // vire la ligne date NOAA si présente
+  if (lines.length >= 2 && /^\d{4}\/\d{2}\/\d{2}/.test(lines[0].trim())) return lines.slice(1).join("\n").trim();
   return lines.join("\n").trim();
 }
 
-async function updateMetarTaf(){
-  // si ça reste “à venir”, c’est que cette ligne ne s’exécute pas
-  document.getElementById("magentaText").textContent = "Chargement METAR/TAF…";
-  document.getElementById("tontoutaText").textContent = "Chargement METAR/TAF…";
+async function tryFetch(urls) {
+  for (const url of urls) {
+    try {
+      const t = cleanTxt(await fetchTxt(url));
+      if (t && !/^\s*$/.test(t)) return t;
+    } catch (e) {}
+  }
+  throw new Error("all sources failed");
+}
 
-  try{
+async function updateMetarTaf() {
+  const magentaEl = document.getElementById("magentaText");
+  const tontoutaEl = document.getElementById("tontoutaText");
+
+  if (!magentaEl || !tontoutaEl) return;
+
+  magentaEl.textContent = "Chargement METAR/TAF…";
+  tontoutaEl.textContent = "Chargement METAR/TAF…";
+
+  try {
     const [mMetar, mTaf, tMetar, tTaf] = await Promise.all([
-      fetchTxt(METEO_SOURCES.magenta.metar),
-      fetchTxt(METEO_SOURCES.magenta.taf),
-      fetchTxt(METEO_SOURCES.tontouta.metar),
-      fetchTxt(METEO_SOURCES.tontouta.taf),
+      tryFetch(METEO_SOURCES.magenta.metar),
+      tryFetch(METEO_SOURCES.magenta.taf),
+      tryFetch(METEO_SOURCES.tontouta.metar),
+      tryFetch(METEO_SOURCES.tontouta.taf)
     ]);
 
-    document.getElementById("magentaText").textContent =
-      `METAR\n${cleanNOAA(mMetar)}\n\nTAF\n${cleanNOAA(mTaf)}`;
-
-    document.getElementById("tontoutaText").textContent =
-      `METAR\n${cleanNOAA(tMetar)}\n\nTAF\n${cleanNOAA(tTaf)}`;
-  } catch(e){
-    document.getElementById("magentaText").textContent = "METAR/TAF indisponible";
-    document.getElementById("tontoutaText").textContent = "METAR/TAF indisponible";
-    console.error(e);
+    magentaEl.textContent = `METAR\n${mMetar}\n\nTAF\n${mTaf}`;
+    tontoutaEl.textContent = `METAR\n${tMetar}\n\nTAF\n${tTaf}`;
+  } catch (e) {
+    magentaEl.textContent = "METAR / TAF indisponible";
+    tontoutaEl.textContent = "METAR / TAF indisponible";
   }
 }
 
-updateMetarTaf();
-setInterval(updateMetarTaf, 10 * 60 * 1000);
+window.addEventListener("DOMContentLoaded", () => {
+  updateMetarTaf();
+  setInterval(updateMetarTaf, 10 * 60 * 1000); // toutes les 10 minutes
+});
+</script>
