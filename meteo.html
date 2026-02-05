@@ -112,13 +112,14 @@ updateNight(); setInterval(updateNight,60000);
 /* ===== METAR + TAF (NWWM / NWWW) ===== */
 const METEO_SOURCES = {
   magenta: {
-    metar: "https://api.allorigins.win/raw?url=https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT",
-    taf:   "https://api.allorigins.win/raw?url=https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"
+    metar: "https://aviationweather.gov/api/data/metar?ids=NWWM&format=raw",
+    taf:   "https://aviationweather.gov/api/data/taf?ids=NWWM&format=raw"
   },
   tontouta: {
-    metar: "https://api.allorigins.win/raw?url=https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT",
-    taf:   "https://api.allorigins.win/raw?url=https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"
+    metar: "https://aviationweather.gov/api/data/metar?ids=NWWW&format=raw",
+    taf:   "https://aviationweather.gov/api/data/taf?ids=NWWW&format=raw"
   }
+};
 };
 };
 
