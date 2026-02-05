@@ -237,4 +237,45 @@ setInterval(majHeures, 1000);   // horloges chaque seconde
   }
 })();
 </script>
-        
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const tz = "Pacific/Noumea";
+  const start = "18:30"; // début nuit
+  const end = "05:10";   // fin nuit
+
+  function toMin(s){
+    const [h,m] = s.split(":").map(Number);
+    return h*60 + m;
+  }
+
+  function updateAeroNight(){
+    const stateEl = document.getElementById("aeroNight");
+    const timesEl = document.getElementById("aeroNightTimes");
+    if(!stateEl || !timesEl) return;
+
+    const now = new Date();
+    const hhmm = new Intl.DateTimeFormat("fr-FR", {
+      timeZone: tz,
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(now);
+
+    const nowMin = toMin(hhmm);
+    const startMin = toMin(start);
+    const endMin = toMin(end);
+
+    const crossesMidnight = startMin > endMin;
+
+    const isNight = crossesMidnight
+      ? (nowMin >= startMin || nowMin < endMin)
+      : (nowMin >= startMin && nowMin < endMin);
+
+    stateEl.textContent = isNight ? "NUIT" : "JOUR";
+    timesEl.textContent = `Début : ${start} • Fin : ${end} (heure locale)`;
+  }
+
+  updateAeroNight();
+  setInterval(updateAeroNight, 60000);
+});
+</script>
