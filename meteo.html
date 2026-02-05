@@ -123,9 +123,26 @@ const METEO_SOURCES = {
 };
 
 async function fetchTxt(url){
-  const r = await fetch(url, { cache: "no-store" });
-  if (!r.ok) throw new Error("HTTP " + r.status);
-  return r.text();
+  const candidates = [
+    url,
+    "https://r.jina.ai/http://" + url.replace(/^https?:\/\//, "")
+  ];
+
+  let lastErr = null;
+
+  for (const u of candidates) {
+    try {
+      const r = await fetch(u, { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const t = await r.text();
+      if (t && t.trim().length > 0) return t;
+      throw new Error("EMPTY");
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+
+  throw lastErr || new Error("fetch failed");
 }
 
 function cleanNOAA(txt){
