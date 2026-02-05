@@ -1,100 +1,94 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Météo aviation – Caledronie</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Météo Aéronautique - Caledronie</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<header>
-  <nav>
-    <a href="index.html">Accueil</a>
-    <a href="formations.html">Formations</a>
-    <a href="temoignages.html">Témoignages</a>
-    <a href="galerie.html">Galerie</a>
-    <a href="meteo.html">Météo</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+<header class="header">
+    <div class="container nav_container">
+        <a href="index.html" class="brand">
+            <span class="brand__text">
+                <span class="brand__name">Caledronie</span>
+                <span class="brand__tag">Formation drone professionnel</span>
+            </span>
+        </a>
+
+        <nav class="nav">
+            <a href="index.html#accueil" class="nav__link">Accueil</a>
+            <a href="index.html#formations" class="nav__link">Formations</a>
+            <a href="index.html#temoignages" class="nav__link">Témoignages</a>
+            <a href="index.html#galerie" class="nav__link">Galerie</a>
+            <a href="index.html#apropos" class="nav__link">À propos</a>
+            <a href="meteo.html" class="nav__link">Météo</a>
+            <a href="index.html#contact" class="nav__cta">Contact</a>
+        </nav>
+    </div>
 </header>
 
-<section class="utile-section">
-  <div class="utile-container">
-    <h2>Météo aviation</h2>
+<main class="section">
+    <div class="container">
 
-    <div class="utile-time-row">
-      <div class="utile-pill">Heure locale (Nouméa) : <strong id="tLocal">--:--:--</strong></div>
-      <div class="utile-pill">Heure UTC : <strong id="tUTC">--:--:--</strong></div>
-      <div class="utile-pill">Indice Kp : <strong id="kpVal">--</strong></div>
+        <h1>Météo aéronautique</h1>
+
+        <div class="meteo-grid">
+
+            <div class="meteo-card">
+                <h2>Nouméa Magenta (NWWM)</h2>
+                <pre id="metar-magenta">Chargement METAR...</pre>
+                <pre id="taf-magenta">Chargement TAF...</pre>
+            </div>
+
+            <div class="meteo-card">
+                <h2>Nouméa Tontouta (NWWW)</h2>
+                <pre id="metar-tontouta">Chargement METAR...</pre>
+                <pre id="taf-tontouta">Chargement TAF...</pre>
+            </div>
+
+            <div class="meteo-card">
+                <h2>Infos utiles</h2>
+                <p>Heure locale : <span id="heure-locale"></span></p>
+                <p>Heure UTC : <span id="heure-utc"></span></p>
+                <p>Indice Kp : <span id="kp-index">Chargement...</span></p>
+            </div>
+
+        </div>
     </div>
-
-    <div class="utile-grid">
-      <div class="utile-card">
-        <h3>NWWM — Nouméa Magenta</h3>
-        <div class="utile-meta">METAR</div>
-        <pre class="utile-pre" id="metarNWWM">Chargement…</pre>
-        <div class="utile-meta" style="margin-top:12px;">TAF</div>
-        <pre class="utile-pre" id="tafNWWM">Chargement…</pre>
-      </div>
-
-      <div class="utile-card">
-        <h3>NWWW — Nouméa La Tontouta</h3>
-        <div class="utile-meta">METAR</div>
-        <pre class="utile-pre" id="metarNWWW">Chargement…</pre>
-        <div class="utile-meta" style="margin-top:12px;">TAF</div>
-        <pre class="utile-pre" id="tafNWWW">Chargement…</pre>
-      </div>
-    </div>
-  </div>
-</section>
+</main>
 
 <script>
-const WORKER = "https://meteo-caledronie.piewic35.workers.dev";
+const API = "https://meteo-caledronie.piewic35.workers.dev";
 
-function pad(n){ return String(n).padStart(2,'0'); }
-
-function updateClocks(){
-  const now = new Date();
-  document.getElementById("tUTC").textContent =
-    `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}`;
-  const noumea = new Intl.DateTimeFormat("fr-FR", {
-    timeZone:"Pacific/Noumea", hour:"2-digit", minute:"2-digit", second:"2-digit"
-  }).format(now);
-  document.getElementById("tLocal").textContent = noumea;
-}
-setInterval(updateClocks, 1000);
-updateClocks();
-
-async function loadText(url, id){
-  try{
-    const r = await fetch(url);
+async function charger(station, type, elementId) {
+    const r = await fetch(`${API}/${type}?station=${station}`);
     const t = await r.text();
-    document.getElementById(id).textContent = t.trim();
-  }catch(e){
-    document.getElementById(id).textContent = "Indisponible";
-  }
+    document.getElementById(elementId).textContent = t;
 }
 
-async function loadKp(){
-  try{
-    const r = await fetch(`${WORKER}/kp`);
-    const data = await r.json();
-    const last = data[data.length - 1];
-    document.getElementById("kpVal").textContent = last[1];
-  }catch(e){
-    document.getElementById("kpVal").textContent = "--";
-  }
+function majHeures() {
+    const now = new Date();
+    document.getElementById("heure-locale").textContent = now.toLocaleTimeString();
+    document.getElementById("heure-utc").textContent = now.toUTCString().split(" ")[4];
 }
 
-function refresh(){
-  loadText(`${WORKER}/metar?station=NWWM`, "metarNWWM");
-  loadText(`${WORKER}/taf?station=NWWM`, "tafNWWM");
-  loadText(`${WORKER}/metar?station=NWWW`, "metarNWWW");
-  loadText(`${WORKER}/taf?station=NWWW`, "tafNWWW");
-  loadKp();
+async function chargerKp() {
+    const r = await fetch(`${API}/kp`);
+    const j = await r.json();
+    document.getElementById("kp-index").textContent = j.Kp || j.kp || "N/A";
 }
-refresh();
-setInterval(refresh, 60000);
+
+charger("NWWM", "metar", "metar-magenta");
+charger("NWWM", "taf", "taf-magenta");
+charger("NWWW", "metar", "metar-tontouta");
+charger("NWWW", "taf", "taf-tontouta");
+
+majHeures();
+chargerKp();
+setInterval(majHeures, 1000);
+setInterval(chargerKp, 600000);
 </script>
 
 </body>
