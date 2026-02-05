@@ -80,15 +80,29 @@ async function chargerKp() {
     document.getElementById("kp-index").textContent = j.Kp || j.kp || "N/A";
 }
 
-charger("NWWM", "metar", "metar-magenta");
-charger("NWWM", "taf", "taf-magenta");
-charger("NWWW", "metar", "metar-tontouta");
-charger("NWWW", "taf", "taf-tontouta");
+function refresh() {
+  charger("NWWM", "metar", "metar-magenta");
+  charger("NWWM", "taf", "taf-magenta");
+  charger("NWWW", "metar", "metar-tontouta");
+  charger("NWWW", "taf", "taf-tontouta");
+  chargerKp();
+}
 
+function majHeures() {
+  const now = new Date();
+  document.getElementById("heure-local").textContent =
+    now.toLocaleTimeString("fr-FR", { timeZone: "Pacific/Noumea" });
+  document.getElementById("heure-utc").textContent =
+    now.toUTCString().split(" ")[4];
+}
+
+// Chargement initial
+refresh();
 majHeures();
-chargerKp();
-setInterval(majHeures, 1000);
-setInterval(chargerKp, 600000);
+
+// Mise à jour automatique
+setInterval(refresh, 600000);   // météo toutes les 10 min
+setInterval(majHeures, 1000);   // horloges chaque seconde
 </script>
 
 </body>
