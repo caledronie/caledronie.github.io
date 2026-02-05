@@ -121,7 +121,6 @@ const METEO_SOURCES = {
     taf:   "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"
   }
 };
-};
 
 async function fetchTxt(url){
   const r = await fetch(url, { cache: "no-store" });
