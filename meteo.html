@@ -183,40 +183,5 @@ setInterval(majHeures, 1000);   // horloges chaque seconde
 })();
 
 </script>
-    const AERO_NIGHT = {
-  tz: "Pacific/Noumea",
-  start: "18:30",  // début nuit (heure locale)
-  end: "05:10"     // fin nuit (heure locale)
-};
-    function updateAeroNightFixed() {
-  const stateEl = document.getElementById("aeroNight");
-  const timesEl = document.getElementById("aeroNightTimes");
-  if (!stateEl || !timesEl) return;
 
-  const now = new Date();
-
-  // Heure locale courante au format HH:MM
-  const hhmm = new Intl.DateTimeFormat("fr-FR", {
-    timeZone: AERO_NIGHT.tz, hour: "2-digit", minute: "2-digit"
-  }).format(now);
-
-  const toMin = (s) => {
-    const [h, m] = s.split(":").map(Number);
-    return h * 60 + m;
-  };
-
-  const nowMin = toMin(hhmm);
-  const startMin = toMin(AERO_NIGHT.start);
-  const endMin = toMin(AERO_NIGHT.end);
-
-  const crossesMidnight = startMin > endMin;
-
-  const isNight = crossesMidnight
-    ? (nowMin >= startMin || nowMin < endMin)
-    : (nowMin >= startMin && nowMin < endMin);
-
-  stateEl.textContent = isNight ? "NUIT" : "JOUR";
-  timesEl.textContent = `Début : ${AERO_NIGHT.start} • Fin : ${AERO_NIGHT.end} (heure locale)`;
-}updateAeroNightFixed();
-setInterval(updateAeroNightFixed, 60 * 1000);
         
