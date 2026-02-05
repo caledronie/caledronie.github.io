@@ -136,3 +136,31 @@ async function updateKp() {
   }
 }
 </script>
+<div class="card">
+  <div class="card-title">Heure locale</div>
+  <div class="card-value" id="localTime">—</div>
+  <div class="card-sub" id="localTz">—</div>
+</div>
+
+<div class="card">
+  <div class="card-title">Heure UTC</div>
+  <div class="card-value" id="utcTime">—</div>
+</div>
+
+<script>
+const DEFAULT_TZ = "Pacific/Noumea"; // au besoin
+
+function startClocks(timeZone = DEFAULT_TZ) {
+  function tick() {
+    const now = new Date();
+    document.getElementById("localTime").textContent =
+      new Intl.DateTimeFormat("fr-FR", { timeZone, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(now);
+    document.getElementById("localTz").textContent = timeZone;
+
+    document.getElementById("utcTime").textContent =
+      new Intl.DateTimeFormat("fr-FR", { timeZone: "UTC", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(now);
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+</script>
