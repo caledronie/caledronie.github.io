@@ -866,3 +866,11 @@ code{
 .infos span{ opacity:.85; }
 .infos strong{ font-size:1.05rem; letter-spacing:.3px; }
 .infos .info-sub{ margin-top:10px; font-size:.86rem; opacity:.75; }
+header, nav {
+  position: relative;
+  z-index: 9999;
+}
+.meteo-page, main {
+  position: relative;
+  z-index: 1;
+}
