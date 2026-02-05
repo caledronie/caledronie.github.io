@@ -962,3 +962,55 @@ header, nav {
     grid-template-columns: 1fr;
   }
 }
+/* ===== FORCE STYLE PAGE METEO ===== */
+
+.meteo-page {
+  padding: 40px 0 80px;
+}
+
+.meteo-page h1 {
+  font-size: 48px;
+  margin-bottom: 30px;
+  letter-spacing: -1px;
+}
+
+.meteo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.meteo-card {
+  background: rgba(255,255,255,0.05) !important;
+  border-radius: 16px;
+  padding: 22px 24px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+.meteo-card h2 {
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.meteo-card pre {
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #eaeaea;
+}
+
+.meteo-infos .info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+@media (max-width: 1000px) {
+  .meteo-grid {
+    grid-template-columns: 1fr;
+  }
+}
