@@ -320,6 +320,41 @@
 
     async function updateKp(){
   try{
+    const url = `https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json?_=${Date.now()}`;
+    const table = await fetchJson(url);
+
+    // table = [headerRow, row1, row2, ...]
+    const header = table[0];
+    const rows = table.slice(1);
+
+    const idxTime = header.indexOf("time_tag");
+    const idxKp   = header.indexOf("kp");
+    const idxObs  = header.indexOf("observed");
+
+    // priorité: dernier "observed", sinon dernier "estimated"
+    let last = [...rows].reverse().find(r => r[idxObs] === "observed");
+    if(!last) last = [...rows].reverse().find(r => r[idxObs] === "estimated");
+    if(!last) last = rows[rows.length - 1];
+
+    const kp = last?.[idxKp];
+    const t  = last?.[idxTime];
+    const obsType = last?.[idxObs];
+
+    // IMPORTANT: parseFloat (pas parseInt) sinon 4.33 devient 4, 0.67 devient 0
+    const kpNum = (kp != null) ? Number.parseFloat(kp) : null;
+
+    document.getElementById("kpValue").textContent =
+      (kpNum != null && !Number.isNaN(kpNum)) ? kpNum.toFixed(2) : "--";
+
+    document.getElementById("kpTime").textContent =
+      "Mise à jour : " + (t ?? "--") + (obsType ? ` (${obsType})` : "");
+
+  }catch(e){
+    document.getElementById("kpValue").textContent = "--";
+    document.getElementById("kpTime").textContent = "Mise à jour : --";
+  }
+} function updateKp(){
+  try{
     const url = "https://services.swpc.noaa.gov/json/planetary_k_index_3h.json?_=" + Date.now();
     const arr = await fetchJson(url);
 
