@@ -160,124 +160,167 @@
   </main>
 
   <script>
-    const magentaText  = document.getElementById("magentaText");
-    const tontoutaText = document.getElementById("tontoutaText");
-    const localTimeEl  = document.getElementById("localTime");
-    const utcTimeEl    = document.getElementById("utcTime");
-    const kpValueEl    = document.getElementById("kpValue");
-    const kpTimeEl     = document.getElementById("kpTime");
-    const nightStatusEl= document.getElementById("nightStatus");
-    const nightWindowEl= document.getElementById("nightWindow");
+    if (window.__wxRunning) {
+      // évite doublon si tu as copié 2 fois par erreur
+    } else {
+      window.__wxRunning = true;
 
-    const REFRESH_MS = 10 * 60 * 1000;
-    const LAT = -22.2758;
-    const LON = 166.4580;
+      const magentaText   = document.getElementById("magentaText");
+      const tontoutaText  = document.getElementById("tontoutaText");
+      const localTimeEl   = document.getElementById("localTime");
+      const utcTimeEl     = document.getElementById("utcTime");
+      const kpValueEl     = document.getElementById("kpValue");
+      const kpTimeEl      = document.getElementById("kpTime");
+      const nightStatusEl = document.getElementById("nightStatus");
+      const nightWindowEl = document.getElementById("nightWindow");
 
-    function pad2(n){ return String(n).padStart(2,'0'); }
+      const REFRESH_MS = 10 * 60 * 1000;
 
-    function updateClocks(){
-      const now = new Date();
-      localTimeEl.textContent = now.toLocaleTimeString();
-      utcTimeEl.textContent = pad2(now.getUTCHours())+":"+pad2(now.getUTCMinutes())+":"+pad2(now.getUTCSeconds());
-    }
+      // Nouméa (approx)
+      const LAT = -22.2758;
+      const LON = 166.4580;
 
-    async function fetchText(url){
-      const r = await fetch(url, { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP "+r.status);
-      return await r.text();
-    }
-    async function fetchJson(url){
-      const r = await fetch(url, { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP "+r.status);
-      return await r.json();
-    }
+      function pad2(n){ return String(n).padStart(2,'0'); }
 
-    function viaAllOrigins(url){
-      return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-    }
-    function viaJina(url){
-      return "https://r.jina.ai/http://" + url.replace(/^https?:\/\//,'');
-    }
-
-    async function getTxt(url){
-      try { return await fetchText(url); } catch(e1){}
-      try { return await fetchText(viaAllOrigins(url)); } catch(e2){}
-      return await fetchText(viaJina(url));
-    }
-
-<script>
-/* ✅ REMPLACE UNIQUEMENT ta fonction updateMetarTaf() par celle-ci (le reste ne change pas) */
-
-async function updateMetarTaf(){
-  try{
-    // AviationWeather (meilleur / le plus à jour)
-    const ids = "NWWM,NWWW";
-    const metarUrl = "https://aviationweather.gov/api/data/metar?ids=" + ids +
-      "&format=json&hours=2&mostRecent=true&_=" + Date.now();
-    const tafUrl = "https://aviationweather.gov/api/data/taf?ids=" + ids +
-      "&format=json&hours=12&mostRecent=true&_=" + Date.now();
-
-    // on passe par AllOrigins pour éviter CORS sur GitHub Pages
-    const metars = await fetchJson(viaAllOrigins(metarUrl));
-    const tafs   = await fetchJson(viaAllOrigins(tafUrl));
-
-    const mNWWM = metars.find(x => x.icaoId === "NWWM");
-    const mNWWW = metars.find(x => x.icaoId === "NWWW");
-    const tNWWM = tafs.find(x => x.icaoId === "NWWM");
-    const tNWWW = tafs.find(x => x.icaoId === "NWWW");
-
-    magentaText.textContent =
-      (mNWWM?.rawOb || "METAR indisponible") + "\n\n" +
-      (tNWWM?.rawTAF || "TAF indisponible");
-
-    tontoutaText.textContent =
-      (mNWWW?.rawOb || "METAR indisponible") + "\n\n" +
-      (tNWWW?.rawTAF || "TAF indisponible");
-
-  } catch(e){
-    magentaText.textContent = "Erreur METAR/TAF";
-    tontoutaText.textContent = "Erreur METAR/TAF";
-  }
-}
-</script>
-
-    async function updateKp(){
-      try{
-        const arr = await fetchJson("https://services.swpc.noaa.gov/json/planetary_k_index_3h.json?_=" + Date.now());
-        const last = [...arr].reverse().find(x => x && x.kp_index != null);
-        kpValueEl.textContent = (last && last.kp_index != null) ? String(last.kp_index) : "--";
-        kpTimeEl.textContent = "Mise à jour : " + (last && last.time_tag ? new Date(last.time_tag).toLocaleString() : "--");
-      }catch(e){
-        kpValueEl.textContent = "--";
-        kpTimeEl.textContent = "Mise à jour : --";
+      function viaAllOrigins(url){
+        return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
       }
-    }
 
-    async function updateNight(){
-      try{
-        const j = await fetchJson(`https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`);
-        const sunrise = new Date(j.results.sunrise);
-        const sunset  = new Date(j.results.sunset);
-        const start = new Date(sunset.getTime() + 30*60000);
-        const end   = new Date(sunrise.getTime() - 30*60000);
+      async function fetchText(url){
+        const r = await fetch(url, { cache:"no-store" });
+        if(!r.ok) throw new Error("HTTP " + r.status);
+        return await r.text();
+      }
+
+      async function fetchJson(url){
+        const r = await fetch(url, { cache:"no-store" });
+        if(!r.ok) throw new Error("HTTP " + r.status);
+        return await r.json();
+      }
+
+      function updateClocks(){
         const now = new Date();
-        const isNight = (now >= start) || (now <= end);
-        nightStatusEl.textContent = isNight ? "NUIT" : "JOUR";
-        nightWindowEl.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
-      }catch(e){
-        nightStatusEl.textContent = "--";
-        nightWindowEl.textContent = "Début : -- • Fin : --";
+        localTimeEl.textContent = now.toLocaleTimeString();
+        utcTimeEl.textContent = pad2(now.getUTCHours()) + ":" + pad2(now.getUTCMinutes()) + ":" + pad2(now.getUTCSeconds());
       }
-    }
 
-    async function refreshAll(){
-      await Promise.allSettled([ updateMetarTaf(), updateKp(), updateNight() ]);
-    }
+      async function updateNight(){
+        try{
+          const j = await fetchJson(`https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`);
+          const sunrise = new Date(j.results.sunrise);
+          const sunset  = new Date(j.results.sunset);
 
-    refreshAll();
-    setInterval(refreshAll, REFRESH_MS);
-    setInterval(updateClocks, 1000);
-    updateClocks();
+          // approx -6° : marge 30 min
+          const start = new Date(sunset.getTime() + 30*60000);
+          const end   = new Date(sunrise.getTime() - 30*60000);
+
+          const now = new Date();
+          const isNight = (now >= start) || (now <= end);
+
+          nightStatusEl.textContent = isNight ? "NUIT" : "JOUR";
+          nightWindowEl.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
+        }catch(e){
+          nightStatusEl.textContent = "--";
+          nightWindowEl.textContent = "Début : -- • Fin : --";
+        }
+      }
+
+      // METAR/TAF : AviationWeather via AllOrigins (le plus à jour) + fallback NOAA TXT
+      async function updateMetarTaf(){
+        try{
+          const ids = "NWWM,NWWW";
+          const metarUrl = `https://aviationweather.gov/api/data/metar?ids=${ids}&format=json&hours=2&mostRecent=true&_=${Date.now()}`;
+          const tafUrl   = `https://aviationweather.gov/api/data/taf?ids=${ids}&format=json&hours=12&mostRecent=true&_=${Date.now()}`;
+
+          const metars = await fetchJson(viaAllOrigins(metarUrl));
+          const tafs   = await fetchJson(viaAllOrigins(tafUrl));
+
+          const mNWWM = metars.find(x => x.icaoId === "NWWM");
+          const mNWWW = metars.find(x => x.icaoId === "NWWW");
+          const tNWWM = tafs.find(x => x.icaoId === "NWWM");
+          const tNWWW = tafs.find(x => x.icaoId === "NWWW");
+
+          magentaText.textContent =
+            (mNWWM?.rawOb || "METAR indisponible") + "\n\n" +
+            (tNWWM?.rawTAF || "TAF indisponible");
+
+          tontoutaText.textContent =
+            (mNWWW?.rawOb || "METAR indisponible") + "\n\n" +
+            (tNWWW?.rawTAF || "TAF indisponible");
+
+          return;
+        } catch (e1) {
+          // fallback NOAA TXT (au cas où)
+          try{
+            const magMetar = await fetchText(viaAllOrigins("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT"));
+            const magTaf   = await fetchText(viaAllOrigins("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"));
+            const tonMetar = await fetchText(viaAllOrigins("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT"));
+            const tonTaf   = await fetchText(viaAllOrigins("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"));
+
+            magentaText.textContent =
+              magMetar.trim().split("\n").slice(1).join("\n") + "\n\n" +
+              magTaf.trim().split("\n").slice(1).join("\n");
+
+            tontoutaText.textContent =
+              tonMetar.trim().split("\n").slice(1).join("\n") + "\n\n" +
+              tonTaf.trim().split("\n").slice(1).join("\n");
+          }catch(e2){
+            magentaText.textContent = "Erreur METAR/TAF";
+            tontoutaText.textContent = "Erreur METAR/TAF";
+          }
+        }
+      }
+
+      // Kp : version robuste (2 formats possibles)
+      async function updateKp(){
+        try{
+          // 1) tente format "forecast" (table)
+          const table = await fetchJson(`https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json?_=${Date.now()}`);
+          if (Array.isArray(table) && Array.isArray(table[0])) {
+            const header = table[0];
+            const rows = table.slice(1);
+            const idxTime = header.indexOf("time_tag");
+            const idxKp   = header.indexOf("kp");
+            const idxObs  = header.indexOf("observed");
+
+            let last = [...rows].reverse().find(r => r[idxObs] === "observed");
+            if(!last) last = [...rows].reverse().find(r => r[idxObs] === "estimated");
+            if(!last) last = rows[rows.length - 1];
+
+            const kp = Number.parseFloat(last?.[idxKp]);
+            const tt = last?.[idxTime];
+
+            if (!Number.isNaN(kp)) {
+              kpValueEl.textContent = kp.toFixed(2);
+              kpTimeEl.textContent = "Mise à jour : " + (tt ?? "--");
+              return;
+            }
+          }
+
+          // 2) fallback format "objets"
+          const arr = await fetchJson(`https://services.swpc.noaa.gov/json/planetary_k_index_3h.json?_=${Date.now()}`);
+          const lastObj = Array.isArray(arr) ? [...arr].reverse().find(x => x && x.kp_index != null) : null;
+
+          const kp2 = Number.parseFloat(lastObj?.kp_index);
+          kpValueEl.textContent = (!Number.isNaN(kp2)) ? kp2.toFixed(2) : "--";
+          kpTimeEl.textContent  = "Mise à jour : " + (lastObj?.time_tag ? new Date(lastObj.time_tag).toLocaleString() : "--");
+        }catch(e){
+          kpValueEl.textContent = "--";
+          kpTimeEl.textContent  = "Mise à jour : --";
+        }
+      }
+
+      async function refreshAll(){
+        await Promise.allSettled([ updateMetarTaf(), updateKp(), updateNight() ]);
+      }
+
+      // start
+      updateClocks();
+      refreshAll();
+
+      setInterval(updateClocks, 1000);
+      setInterval(refreshAll, REFRESH_MS);
+    }
   </script>
 </body>
 </html>
