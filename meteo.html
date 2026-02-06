@@ -12,7 +12,7 @@
       --muted:rgba(233,238,245,.72);
       --glass:rgba(255,255,255,.06);
       --line:rgba(255,255,255,.12);
-      --accent:#7dff9a;
+      --accent:#7dff9a; /* ✅ VERT ACCENT */
     }
     *{box-sizing:border-box}
     body{
@@ -44,22 +44,37 @@
     nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:18px;font-weight:600;color:rgba(233,238,245,.85)}
     nav a{opacity:.9}
     nav a:hover{opacity:1}
+
+    /* ✅ CONTACT en vert */
     .btn{
       display:inline-flex;align-items:center;justify-content:center;
       padding:10px 14px;border-radius:999px;
       background:rgba(125,255,154,.18);
-      border:1px solid rgba(125,255,154,.35);
+      border:1px solid rgba(125,255,154,.45);
       font-weight:800;
+      color:var(--accent);
     }
     .btn:hover{background:rgba(125,255,154,.24)}
+
+    /* ✅ ONGLET METEO actif en vert */
     .active{
-      color:var(--text);
-      border-bottom:2px solid rgba(125,255,154,.55);
+      color:var(--accent);
+      border-bottom:2px solid rgba(125,255,154,.75);
       padding-bottom:6px;
     }
 
     main.meteo-page{padding:26px 0 44px}
-    h1{margin:20px 0 18px;font-size:46px;letter-spacing:-.5px}
+
+    /* ✅ TITRE principal en vert */
+    h1{
+      margin:20px 0 18px;
+      font-size:46px;
+      letter-spacing:-.5px;
+      background: linear-gradient(90deg, var(--accent), #b4ffcc);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
     .weather-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:stretch}
     .weather-card{
       border-radius:16px;
@@ -69,7 +84,26 @@
       padding:16px 16px 14px;
       box-shadow:0 10px 30px rgba(0,0,0,.25);
     }
-    .weather-card h2{margin:0 0 10px;font-size:18px}
+
+    /* ✅ TITRES des cartes en vert + petite barre */
+    .weather-card h2{
+      margin:0 0 10px;
+      font-size:18px;
+      color:var(--accent);
+      position:relative;
+      padding-left:12px;
+    }
+    .weather-card h2::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:5px;
+      bottom:5px;
+      width:4px;
+      border-radius:2px;
+      background:var(--accent);
+    }
+
     pre{
       margin:0;padding:12px;border-radius:14px;
       background:rgba(0,0,0,.28);
@@ -161,7 +195,7 @@
 
   <script>
     if (window.__wxRunning) {
-      // évite doublon si tu as copié 2 fois par erreur
+      // évite doublon
     } else {
       window.__wxRunning = true;
 
@@ -176,7 +210,6 @@
 
       const REFRESH_MS = 10 * 60 * 1000;
 
-      // Nouméa (approx)
       const LAT = -22.2758;
       const LON = 166.4580;
 
@@ -210,7 +243,6 @@
           const sunrise = new Date(j.results.sunrise);
           const sunset  = new Date(j.results.sunset);
 
-          // approx -6° : marge 30 min
           const start = new Date(sunset.getTime() + 30*60000);
           const end   = new Date(sunrise.getTime() - 30*60000);
 
@@ -225,7 +257,6 @@
         }
       }
 
-      // METAR/TAF : AviationWeather via AllOrigins (le plus à jour) + fallback NOAA TXT
       async function updateMetarTaf(){
         try{
           const ids = "NWWM,NWWW";
@@ -250,7 +281,6 @@
 
           return;
         } catch (e1) {
-          // fallback NOAA TXT (au cas où)
           try{
             const magMetar = await fetchText(viaAllOrigins("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT"));
             const magTaf   = await fetchText(viaAllOrigins("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"));
@@ -271,10 +301,8 @@
         }
       }
 
-      // Kp : version robuste (2 formats possibles)
       async function updateKp(){
         try{
-          // 1) tente format "forecast" (table)
           const table = await fetchJson(`https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json?_=${Date.now()}`);
           if (Array.isArray(table) && Array.isArray(table[0])) {
             const header = table[0];
@@ -297,7 +325,6 @@
             }
           }
 
-          // 2) fallback format "objets"
           const arr = await fetchJson(`https://services.swpc.noaa.gov/json/planetary_k_index_3h.json?_=${Date.now()}`);
           const lastObj = Array.isArray(arr) ? [...arr].reverse().find(x => x && x.kp_index != null) : null;
 
@@ -314,7 +341,6 @@
         await Promise.allSettled([ updateMetarTaf(), updateKp(), updateNight() ]);
       }
 
-      // start
       updateClocks();
       refreshAll();
 
