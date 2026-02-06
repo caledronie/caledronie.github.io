@@ -122,6 +122,33 @@
       nav ul{flex-wrap:wrap;gap:12px}
       .weather-grid{grid-template-columns:1fr}
     }
+    /* ===== LOGO MARQUE (comme accueil) ===== */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:inherit;
+}
+
+.brand-badge{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+
+  /* 🔥 ICI on met le logo */
+  background-image: url("/images/logo.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.brand-text{ display:flex; flex-direction:column; line-height:1.05; }
+.brand-name{ font-weight:800; font-size:16px; letter-spacing:.2px; }
+.brand-tag{ font-size:12px; opacity:.75; }
     /* ===== FOND IMAGE METEO ===== */
 .meteo-bg{
   position: fixed;
@@ -143,9 +170,13 @@ body{ position: relative; z-index: 0; }
     <div class="container">
       <div class="topbar">
         <a class="brand" href="index.html">
-          <span class="brand-badge"></span>
-          <span>Caledronie</span>
-        </a>
+  <span class="brand-badge" aria-hidden="true"></span>
+
+  <span class="brand-text">
+    <span class="brand-name">Caledronie</span>
+    <span class="brand-tag">Formation drone professionnel</span>
+  </span>
+</a>
         <nav>
 <ul>
   <li><a href="index.html#accueil">Accueil</a></li>
