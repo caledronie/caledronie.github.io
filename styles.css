@@ -1470,3 +1470,61 @@ body.meteo-page-bg {
   }
   */
 }
+/* ===== MOBILE HEADER FIX ULTRA CIBLÉ ===== */
+@media (max-width: 768px) {
+
+  /* Conteneur tout en haut (bande logo + menu) */
+  body > div:first-child,
+  body > header,
+  .top-bar,
+  .navbar,
+  .header-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Ligne logo + texte */
+  img[alt*="logo"], 
+  img[src*="logo"] {
+    height: 40px !important;
+    width: auto !important;
+    margin-right: 8px !important;
+  }
+
+  /* Texte à côté du logo */
+  .site-title, .brand-text, .logo-text {
+    font-size: 13px !important;
+    line-height: 1.1 !important;
+    text-align: left !important;
+  }
+
+  /* MENU PRINCIPAL (Accueil, Formations, etc.) */
+  a[href*="formations"],
+  a[href*="temoignages"],
+  a[href*="galerie"],
+  a[href*="apropos"],
+  a[href="/"],
+  a[href*="meteo"],
+  a[href*="contact"] {
+    display: inline-block !important;
+    padding: 6px 8px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Conteneur des liens */
+  nav, .menu, .nav-links, .navigation {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  /* Boutons Météo / Contact */
+  a[href*="meteo"], 
+  a[href*="contact"] {
+    margin-top: 4px !important;
+  }
+}
