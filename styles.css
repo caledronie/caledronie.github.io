@@ -1547,4 +1547,28 @@ body.meteo-page-bg {
 /* Évite que iOS bloque la hauteur */
 .overlay, .modal, .popup {
   height: 100dvh !important;
+}/* ===== KILL SWITCH : SUPPRIME TOUS LES OVERLAYS / MODALES BLOQUANTES ===== */
+
+/* On force le scroll au cas où un script met overflow:hidden */
+html, body {
+  overflow: auto !important;
+  height: auto !important;
+}
+
+/* Cibles fréquentes d'overlays/modales/backdrops */
+.overlay, .modal, .popup, .backdrop, .lightbox, .drawer, .sheet,
+[class*="overlay"], [id*="overlay"],
+[class*="modal"],   [id*="modal"],
+[class*="popup"],   [id*="popup"],
+[class*="backdrop"],[id*="backdrop"],
+[class*="lightbox"],[id*="lightbox"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Si un calque “fixed” pleine page existe, on le désactive (cas iOS typique) */
+body > * {
+  /* rien ici, juste pour ne pas casser le site */
 }
