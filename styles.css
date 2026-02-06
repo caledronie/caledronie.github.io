@@ -1528,3 +1528,23 @@ body.meteo-page-bg {
     margin-top: 4px !important;
   }
 }
+/* ===== FIX OVERLAY BLOQUÉ iPHONE ===== */
+
+/* Le fond noir */
+.overlay, .modal, .popup, .backdrop {
+  z-index: 9998 !important;
+}
+
+/* La croix de fermeture */
+.close, .modal-close, .popup-close, .overlay-close {
+  position: fixed !important;
+  top: 15px !important;
+  right: 15px !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+/* Évite que iOS bloque la hauteur */
+.overlay, .modal, .popup {
+  height: 100dvh !important;
+}
