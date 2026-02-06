@@ -1279,4 +1279,49 @@ body.meteo-page-bg {
     linear-gradient(rgba(10,15,20,0.72), rgba(10,15,20,0.82)),
     url("/images/meteo-bg.jpg") center/cover no-repeat;
 }
+/* ===== Bouton menu mobile version météo ===== */
+@media (max-width: 768px){
 
+  .burger{
+    width: 48px;
+    height: 40px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  /* On cache les 3 barres du burger */
+  .burger span{
+    display: none;
+  }
+
+  /* Icône météo ☀️⛅ */
+  .burger::before{
+    content: "⛅";
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* Petit effet lumineux vert comme ton site */
+  .burger::after{
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 16px;
+    box-shadow: 0 0 0 2px rgba(125,255,154,.25);
+    opacity: .35;
+    pointer-events: none;
+  }
+
+  /* Quand le menu est ouvert */
+  .burger[aria-expanded="true"]{
+    background: rgba(125,255,154,.18);
+    border-color: rgba(125,255,154,.35);
+  }
+
+}
