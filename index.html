@@ -334,6 +334,41 @@
   </main>
 
   <script src="script.js"></script>
+  <script>
+  // Force le scroll sur l'ancre quand on arrive depuis une autre page (meteo.html)
+  (function () {
+    function goHash() {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const el = document.querySelector(hash);
+      if (!el) return;
+
+      // petit délai pour laisser les scripts/animations/menu se charger
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+
+    // au chargement
+    window.addEventListener("load", goHash);
+
+    // si on clique sur un lien d'ancre dans la page
+    window.addEventListener("hashchange", goHash);
+  })();
+</script>
+  <script>
+window.addEventListener("load", function() {
+  if (window.location.hash) {
+    const el = document.querySelector(window.location.hash);
+    if (el) {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
+      }, 500);
+    }
+  }
+});
+</script>
 </body>
 </html>
 <script>
