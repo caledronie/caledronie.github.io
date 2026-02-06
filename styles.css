@@ -1347,3 +1347,71 @@ body.meteo-page-bg {
   color: #7CFFB2;
   border-bottom: 2px solid #7CFFB2;
 }
+/* ===== HEADER PRO ALIGNÉ ===== */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+}
+
+/* Bloc logo + texte */
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.branding img {
+  height: 42px;
+}
+
+.branding-text {
+  font-size: 14px;
+  line-height: 1.2;
+  color: white;
+}
+
+/* Menu central */
+.main-nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.main-nav a.active {
+  color: #7CFFB2;
+  border-bottom: 2px solid #7CFFB2;
+}
+
+/* Boutons à droite */
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.header-actions a {
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.header-actions .meteo-btn {
+  color: #7CFFB2;
+  border: 1px solid #7CFFB2;
+}
+
+.header-actions .contact-btn {
+  background: #7CFFB2;
+  color: #0b1d2a;
+}
