@@ -1270,3 +1270,12 @@ body.meteo-page-bg {
     linear-gradient(rgba(10,15,20,0.72), rgba(10,15,20,0.82)),
     url("/images/meteo-bg.jpg") center/cover no-repeat fixed !important;
 }
+/* ===== FOND IMAGE FORCÉ (NE PEUT PAS ÊTRE ÉCRASÉ) ===== */
+.meteo-bg{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(10,15,20,0.72), rgba(10,15,20,0.82)),
+    url("/images/meteo-bg.jpg") center/cover no-repeat;
+}
