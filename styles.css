@@ -1347,71 +1347,61 @@ body.meteo-page-bg {
   color: #7CFFB2;
   border-bottom: 2px solid #7CFFB2;
 }
-/* ===== HEADER PRO ALIGNÉ ===== */
-.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 10px 20px;
-}
+/* ===== MOBILE ONLY : HEADER ALIGNÉ (ne touche pas desktop) ===== */
+@media (max-width: 768px) {
 
-/* Bloc logo + texte */
-.branding {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  /* Le conteneur du header (mets ici la classe/ID réel si différent) */
+  header, .header, .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 12px;
+  }
 
-.branding img {
-  height: 42px;
-}
+  /* Bloc logo + texte : sur une seule ligne, bien aligné */
+  .branding, .logo, .brand, .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+  }
 
-.branding-text {
-  font-size: 14px;
-  line-height: 1.2;
-  color: white;
-}
+  .branding img, .logo img, .header-logo img {
+    height: 40px;
+    width: auto;
+  }
 
-/* Menu central */
-.main-nav {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+  /* Si tu as un texte à côté du logo */
+  .branding-text, .logo-text, .brand-text {
+    font-size: 13px;
+    line-height: 1.15;
+    text-align: left;
+  }
 
-.main-nav a {
-  text-decoration: none;
-  color: white;
-  font-weight: 500;
-  white-space: nowrap;
-}
+  /* Menu : tous les onglets alignés et centrés */
+  .main-nav, nav, .menu, .navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+  }
 
-.main-nav a.active {
-  color: #7CFFB2;
-  border-bottom: 2px solid #7CFFB2;
-}
+  .main-nav a, nav a, .menu a, .navbar a {
+    white-space: nowrap;
+    padding: 6px 8px;
+    font-size: 15px;
+  }
 
-/* Boutons à droite */
-.header-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.header-actions a {
-  padding: 6px 14px;
-  border-radius: 20px;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.header-actions .meteo-btn {
-  color: #7CFFB2;
-  border: 1px solid #7CFFB2;
-}
-
-.header-actions .contact-btn {
-  background: #7CFFB2;
-  color: #0b1d2a;
+  /* Boutons (Météo / Contact) : sur la même ligne, centrés */
+  .header-actions, .nav-actions, .actions, .menu-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+  }
 }
