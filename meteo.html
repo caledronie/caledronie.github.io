@@ -205,25 +205,41 @@
       return await fetchText(viaJina(url));
     }
 
-    async function updateMetarTaf(){
-      try{
-        const magMetar = await getTxt("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT");
-        const magTaf   = await getTxt("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT");
-        const tonMetar = await getTxt("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT");
-        const tonTaf   = await getTxt("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT");
+<script>
+/* ✅ REMPLACE UNIQUEMENT ta fonction updateMetarTaf() par celle-ci (le reste ne change pas) */
 
-        magentaText.textContent =
-          magMetar.trim().split("\n").slice(1).join("\n") + "\n\n" +
-          magTaf.trim().split("\n").slice(1).join("\n");
+async function updateMetarTaf(){
+  try{
+    // AviationWeather (meilleur / le plus à jour)
+    const ids = "NWWM,NWWW";
+    const metarUrl = "https://aviationweather.gov/api/data/metar?ids=" + ids +
+      "&format=json&hours=2&mostRecent=true&_=" + Date.now();
+    const tafUrl = "https://aviationweather.gov/api/data/taf?ids=" + ids +
+      "&format=json&hours=12&mostRecent=true&_=" + Date.now();
 
-        tontoutaText.textContent =
-          tonMetar.trim().split("\n").slice(1).join("\n") + "\n\n" +
-          tonTaf.trim().split("\n").slice(1).join("\n");
-      }catch(e){
-        magentaText.textContent = "Erreur METAR/TAF";
-        tontoutaText.textContent = "Erreur METAR/TAF";
-      }
-    }
+    // on passe par AllOrigins pour éviter CORS sur GitHub Pages
+    const metars = await fetchJson(viaAllOrigins(metarUrl));
+    const tafs   = await fetchJson(viaAllOrigins(tafUrl));
+
+    const mNWWM = metars.find(x => x.icaoId === "NWWM");
+    const mNWWW = metars.find(x => x.icaoId === "NWWW");
+    const tNWWM = tafs.find(x => x.icaoId === "NWWM");
+    const tNWWW = tafs.find(x => x.icaoId === "NWWW");
+
+    magentaText.textContent =
+      (mNWWM?.rawOb || "METAR indisponible") + "\n\n" +
+      (tNWWM?.rawTAF || "TAF indisponible");
+
+    tontoutaText.textContent =
+      (mNWWW?.rawOb || "METAR indisponible") + "\n\n" +
+      (tNWWW?.rawTAF || "TAF indisponible");
+
+  } catch(e){
+    magentaText.textContent = "Erreur METAR/TAF";
+    tontoutaText.textContent = "Erreur METAR/TAF";
+  }
+}
+</script>
 
     async function updateKp(){
       try{
