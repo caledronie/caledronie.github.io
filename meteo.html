@@ -1,127 +1,267 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Météo aéronautique - Caledronie</title>
-<link rel="stylesheet" href="style.css"> <!-- ton CSS habituel -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Météo aéronautique - Caledronie</title>
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --text:#e9eef5;
+      --muted:rgba(233,238,245,.72);
+      --glass:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.12);
+      --accent:#7dff9a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(125,255,154,.12), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(120,180,255,.12), transparent 55%),
+        var(--bg);
+      min-height:100vh;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 18px}
+
+    header{
+      position:sticky;top:0;z-index:10;
+      backdrop-filter:blur(12px);
+      background:rgba(10,14,20,.55);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+    .brand-badge{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg, rgba(125,255,154,.35), rgba(120,180,255,.25));
+      border:1px solid var(--line);
+    }
+    nav ul{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:18px;font-weight:600;color:rgba(233,238,245,.85)}
+    nav a{opacity:.9}
+    nav a:hover{opacity:1}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      background:rgba(125,255,154,.18);
+      border:1px solid rgba(125,255,154,.35);
+      font-weight:800;
+    }
+    .btn:hover{background:rgba(125,255,154,.24)}
+    .active{
+      color:var(--text);
+      border-bottom:2px solid rgba(125,255,154,.55);
+      padding-bottom:6px;
+    }
+
+    main.meteo-page{padding:26px 0 44px}
+    h1{margin:20px 0 18px;font-size:46px;letter-spacing:-.5px}
+    .weather-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:stretch}
+    .weather-card{
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:var(--glass);
+      backdrop-filter:blur(12px);
+      padding:16px 16px 14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    .weather-card h2{margin:0 0 10px;font-size:18px}
+    pre{
+      margin:0;padding:12px;border-radius:14px;
+      background:rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.08);
+      white-space:pre-wrap;word-break:break-word;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+      font-size:13px;line-height:1.35;color:rgba(233,238,245,.92);
+      min-height:140px;
+    }
+    .infos .info-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+    .infos span{color:var(--muted)}
+    .infos strong{font-size:15px}
+    .info-sub{margin-top:8px;font-size:12px;color:rgba(233,238,245,.7)}
+    @media (max-width:980px){
+      h1{font-size:36px}
+      nav ul{flex-wrap:wrap;gap:12px}
+      .weather-grid{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 
 <body>
-
-<header>
-  <div class="container topbar">
-    <a class="brand" href="index.html">
-      <span class="brand-badge"></span>
-      <span>Caledronie</span>
-    </a>
-
-    <nav>
-      <ul>
-        <li><a href="index.html">Accueil</a></li>
-        <li><a href="formations.html">Formations</a></li>
-        <li><a href="temoignages.html">Témoignages</a></li>
-        <li><a href="galerie.html">Galerie</a></li>
-        <li><a href="apropos.html">À propos</a></li>
-        <li><a class="active" href="meteo.html">Météo</a></li>
-        <li><a class="btn" href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-<main class="meteo-page container">
-  <h1>Météo aéronautique</h1>
-
-  <div class="weather-grid">
-
-    <section class="weather-card glass">
-      <h2>Nouméa Magenta (NWWM)</h2>
-      <pre id="magentaText">Chargement METAR/TAF…</pre>
-    </section>
-
-    <section class="weather-card glass">
-      <h2>Nouméa Tontouta (NWWW)</h2>
-      <pre id="tontoutaText">Chargement METAR/TAF…</pre>
-    </section>
-
-    <section class="weather-card glass infos">
-      <h2>Infos utiles</h2>
-
-      <div class="info-row">
-        <span>Heure locale</span>
-        <strong id="localTime">--:--:--</strong>
+  <header>
+    <div class="container">
+      <div class="topbar">
+        <a class="brand" href="index.html">
+          <span class="brand-badge"></span>
+          <span>Caledronie</span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="formations.html">Formations</a></li>
+            <li><a href="temoignages.html">Témoignages</a></li>
+            <li><a href="galerie.html">Galerie</a></li>
+            <li><a href="apropos.html">À propos</a></li>
+            <li><a class="active" href="meteo.html">Météo</a></li>
+            <li><a class="btn" href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
       </div>
+    </div>
+  </header>
 
-      <div class="info-row">
-        <span>Heure UTC</span>
-        <strong id="utcTime">--:--:--</strong>
-      </div>
+  <main class="meteo-page container">
+    <h1>Météo aéronautique</h1>
 
-      <div class="info-row">
-        <span>Indice Kp</span>
-        <strong id="kpValue">--</strong>
-      </div>
-      <div class="info-sub" id="kpTime">Mise à jour : --</div>
-    </section>
+    <div class="weather-grid">
+      <section class="weather-card glass">
+        <h2>Nouméa Magenta (NWWM)</h2>
+        <pre id="magentaText">Chargement METAR/TAF…</pre>
+      </section>
 
-  </div>
-</main>
+      <section class="weather-card glass">
+        <h2>Nouméa Tontouta (NWWW)</h2>
+        <pre id="tontoutaText">Chargement METAR/TAF…</pre>
+      </section>
 
-<script>
-// ===== HORLOGES =====
-const localTime = document.getElementById("localTime");
-const utcTime   = document.getElementById("utcTime");
+      <section class="weather-card glass infos">
+        <h2>Infos utiles</h2>
 
-function updateClocks(){
-  const now = new Date();
-  localTime.textContent = now.toLocaleTimeString();
-  utcTime.textContent =
-    String(now.getUTCHours()).padStart(2,'0') + ":" +
-    String(now.getUTCMinutes()).padStart(2,'0') + ":" +
-    String(now.getUTCSeconds()).padStart(2,'0');
-}
-setInterval(updateClocks,1000);
-updateClocks();
+        <div class="info-row">
+          <span>Heure locale</span>
+          <strong id="localTime">--:--:--</strong>
+        </div>
 
-// ===== METAR / TAF (CHEMIN QUI MARCHAIT) =====
-const magentaText  = document.getElementById("magentaText");
-const tontoutaText = document.getElementById("tontoutaText");
+        <div class="info-row">
+          <span>Heure UTC</span>
+          <strong id="utcTime">--:--:--</strong>
+        </div>
 
-function cors(url){
-  return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-}
+        <div class="info-row">
+          <span>Indice Kp</span>
+          <strong id="kpValue">--</strong>
+        </div>
+        <div class="info-sub" id="kpTime">Mise à jour : --</div>
 
-async function fetchText(url){
-  const r = await fetch(url,{cache:"no-store"});
-  if(!r.ok) throw new Error(r.status);
-  return await r.text();
-}
+        <div style="height:10px"></div>
 
-async function updateMetarTaf(){
-  try{
-    const magMetar = await fetchText(cors("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT"));
-    const magTaf   = await fetchText(cors("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"));
-    const tonMetar = await fetchText(cors("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT"));
-    const tonTaf   = await fetchText(cors("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"));
+        <div class="info-row">
+          <span>Nuit aéronautique</span>
+          <strong id="nightStatus">--</strong>
+        </div>
+        <div class="info-sub" id="nightWindow">Début : -- • Fin : --</div>
+        <div class="info-sub">Calcul : soleil ≤ -6° (Nouméa)</div>
+      </section>
+    </div>
+  </main>
 
-    magentaText.textContent =
-      magMetar.split("\n").slice(1).join("\n") + "\n\n" +
-      magTaf.split("\n").slice(1).join("\n");
+  <script>
+    const magentaText  = document.getElementById("magentaText");
+    const tontoutaText = document.getElementById("tontoutaText");
+    const localTimeEl  = document.getElementById("localTime");
+    const utcTimeEl    = document.getElementById("utcTime");
+    const kpValueEl    = document.getElementById("kpValue");
+    const kpTimeEl     = document.getElementById("kpTime");
+    const nightStatusEl= document.getElementById("nightStatus");
+    const nightWindowEl= document.getElementById("nightWindow");
 
-    tontoutaText.textContent =
-      tonMetar.split("\n").slice(1).join("\n") + "\n\n" +
-      tonTaf.split("\n").slice(1).join("\n");
+    const REFRESH_MS = 10 * 60 * 1000;
+    const LAT = -22.2758;
+    const LON = 166.4580;
 
-  }catch(e){
-    magentaText.textContent = "Erreur METAR/TAF";
-    tontoutaText.textContent = "Erreur METAR/TAF";
-  }
-}
+    function pad2(n){ return String(n).padStart(2,'0'); }
 
-updateMetarTaf();
-setInterval(updateMetarTaf, 10*60*1000);
-</script>
+    function updateClocks(){
+      const now = new Date();
+      localTimeEl.textContent = now.toLocaleTimeString();
+      utcTimeEl.textContent = pad2(now.getUTCHours())+":"+pad2(now.getUTCMinutes())+":"+pad2(now.getUTCSeconds());
+    }
 
+    async function fetchText(url){
+      const r = await fetch(url, { cache:"no-store" });
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return await r.text();
+    }
+    async function fetchJson(url){
+      const r = await fetch(url, { cache:"no-store" });
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return await r.json();
+    }
+
+    function viaAllOrigins(url){
+      return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+    }
+    function viaJina(url){
+      return "https://r.jina.ai/http://" + url.replace(/^https?:\/\//,'');
+    }
+
+    async function getTxt(url){
+      try { return await fetchText(url); } catch(e1){}
+      try { return await fetchText(viaAllOrigins(url)); } catch(e2){}
+      return await fetchText(viaJina(url));
+    }
+
+    async function updateMetarTaf(){
+      try{
+        const magMetar = await getTxt("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT");
+        const magTaf   = await getTxt("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT");
+        const tonMetar = await getTxt("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT");
+        const tonTaf   = await getTxt("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT");
+
+        magentaText.textContent =
+          magMetar.trim().split("\n").slice(1).join("\n") + "\n\n" +
+          magTaf.trim().split("\n").slice(1).join("\n");
+
+        tontoutaText.textContent =
+          tonMetar.trim().split("\n").slice(1).join("\n") + "\n\n" +
+          tonTaf.trim().split("\n").slice(1).join("\n");
+      }catch(e){
+        magentaText.textContent = "Erreur METAR/TAF";
+        tontoutaText.textContent = "Erreur METAR/TAF";
+      }
+    }
+
+    async function updateKp(){
+      try{
+        const arr = await fetchJson("https://services.swpc.noaa.gov/json/planetary_k_index_3h.json?_=" + Date.now());
+        const last = [...arr].reverse().find(x => x && x.kp_index != null);
+        kpValueEl.textContent = (last && last.kp_index != null) ? String(last.kp_index) : "--";
+        kpTimeEl.textContent = "Mise à jour : " + (last && last.time_tag ? new Date(last.time_tag).toLocaleString() : "--");
+      }catch(e){
+        kpValueEl.textContent = "--";
+        kpTimeEl.textContent = "Mise à jour : --";
+      }
+    }
+
+    async function updateNight(){
+      try{
+        const j = await fetchJson(`https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`);
+        const sunrise = new Date(j.results.sunrise);
+        const sunset  = new Date(j.results.sunset);
+        const start = new Date(sunset.getTime() + 30*60000);
+        const end   = new Date(sunrise.getTime() - 30*60000);
+        const now = new Date();
+        const isNight = (now >= start) || (now <= end);
+        nightStatusEl.textContent = isNight ? "NUIT" : "JOUR";
+        nightWindowEl.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
+      }catch(e){
+        nightStatusEl.textContent = "--";
+        nightWindowEl.textContent = "Début : -- • Fin : --";
+      }
+    }
+
+    async function refreshAll(){
+      await Promise.allSettled([ updateMetarTaf(), updateKp(), updateNight() ]);
+    }
+
+    refreshAll();
+    setInterval(refreshAll, REFRESH_MS);
+    setInterval(updateClocks, 1000);
+    updateClocks();
+  </script>
 </body>
 </html>
