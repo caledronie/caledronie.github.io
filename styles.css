@@ -1216,47 +1216,46 @@ nav a:focus{
   border-radius: 2px;
   background: var(--accent);
 }
-/* ===== AJOUT ACCENTS VERTS (SANS TOUCHER AU HTML) ===== */
+/* ===== ACCENTS VERTS (FORCÉS LÉGÈREMENT) ===== */
 
-/* Couleur verte principale */
 :root {
   --accent: #7dff9a;
 }
 
-/* Titre principal "Météo aéronautique" */
+/* Titre principal */
 h1 {
-  background: linear-gradient(90deg, var(--accent), #b4ffcc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: linear-gradient(90deg, var(--accent), #b4ffcc) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
 }
 
-/* Titres des cartes (Magenta, Tontouta, Infos utiles) */
+/* Titres des cartes */
 .weather-card h2 {
-  color: var(--accent);
+  color: var(--accent) !important;
   position: relative;
   padding-left: 12px;
 }
 
 .weather-card h2::before {
-  content: "";
+  content: "" !important;
   position: absolute;
   left: 0;
   top: 4px;
   bottom: 4px;
   width: 4px;
   border-radius: 2px;
-  background: var(--accent);
+  background: var(--accent) !important;
 }
 
-/* Onglet Contact dans le menu */
-nav a.btn {
-  background: rgba(125,255,154,0.2);
-  border: 1px solid rgba(125,255,154,0.5);
-  color: var(--accent);
+/* Bouton Contact */
+nav .btn {
+  background: rgba(125,255,154,0.18) !important;
+  border: 1px solid rgba(125,255,154,0.45) !important;
+  color: var(--accent) !important;
 }
 
 /* Onglet Météo actif */
 nav a.active {
-  color: var(--accent);
-  border-bottom: 2px solid var(--accent);
+  color: var(--accent) !important;
+  border-bottom: 2px solid var(--accent) !important;
 }
