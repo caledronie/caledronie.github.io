@@ -18,7 +18,13 @@ body{
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background:
   linear-gradient(rgba(10,15,20,0.72), rgba(10,15,20,0.82)),
-  url("images/meteo-bg.jpg") center/cover no-repeat fixed;:
+  url("images/meteo-bg.jpg"),
+  url("./images/meteo-bg.jpg"),
+  url("meteo-bg.jpg");
+background-position: center;
+background-size: cover;
+background-repeat: no-repeat;
+background-attachment: fixed;
     
   color: var(--text);
 }
