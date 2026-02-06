@@ -4,53 +4,74 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Météo aéronautique - Caledronie</title>
-
-<style>
-body{margin:0;font-family:system-ui;background:#0b0f14;color:#e9eef5}
-.container{max-width:1100px;margin:auto;padding:20px}
-.weather-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.weather-card{background:rgba(255,255,255,.06);padding:16px;border-radius:14px}
-pre{background:#00000055;padding:12px;border-radius:10px;white-space:pre-wrap}
-.info-row{display:flex;justify-content:space-between;margin:8px 0}
-.info-sub{font-size:12px;opacity:.7}
-@media(max-width:900px){.weather-grid{grid-template-columns:1fr}}
-</style>
+<link rel="stylesheet" href="style.css"> <!-- ton CSS habituel -->
 </head>
 
 <body>
-<main class="container">
-<h1>Météo aéronautique</h1>
 
-<div class="weather-grid">
+<header>
+  <div class="container topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-badge"></span>
+      <span>Caledronie</span>
+    </a>
 
-<section class="weather-card">
-<h2>Nouméa Magenta (NWWM)</h2>
-<pre id="magentaText">Chargement…</pre>
-</section>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="formations.html">Formations</a></li>
+        <li><a href="temoignages.html">Témoignages</a></li>
+        <li><a href="galerie.html">Galerie</a></li>
+        <li><a href="apropos.html">À propos</a></li>
+        <li><a class="active" href="meteo.html">Météo</a></li>
+        <li><a class="btn" href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
-<section class="weather-card">
-<h2>Nouméa Tontouta (NWWW)</h2>
-<pre id="tontoutaText">Chargement…</pre>
-</section>
+<main class="meteo-page container">
+  <h1>Météo aéronautique</h1>
 
-<section class="weather-card">
-<h2>Infos utiles</h2>
+  <div class="weather-grid">
 
-<div class="info-row"><span>Heure locale</span><strong id="localTime">--:--</strong></div>
-<div class="info-row"><span>Heure UTC</span><strong id="utcTime">--:--</strong></div>
-<div class="info-row"><span>Indice Kp</span><strong id="kpValue">--</strong></div>
-<div class="info-sub" id="kpTime">Mise à jour : --</div>
+    <section class="weather-card glass">
+      <h2>Nouméa Magenta (NWWM)</h2>
+      <pre id="magentaText">Chargement METAR/TAF…</pre>
+    </section>
 
-</section>
+    <section class="weather-card glass">
+      <h2>Nouméa Tontouta (NWWW)</h2>
+      <pre id="tontoutaText">Chargement METAR/TAF…</pre>
+    </section>
 
-</div>
+    <section class="weather-card glass infos">
+      <h2>Infos utiles</h2>
+
+      <div class="info-row">
+        <span>Heure locale</span>
+        <strong id="localTime">--:--:--</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Heure UTC</span>
+        <strong id="utcTime">--:--:--</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Indice Kp</span>
+        <strong id="kpValue">--</strong>
+      </div>
+      <div class="info-sub" id="kpTime">Mise à jour : --</div>
+    </section>
+
+  </div>
 </main>
 
 <script>
-const magentaText = document.getElementById("magentaText");
-const tontoutaText = document.getElementById("tontoutaText");
+// ===== HORLOGES =====
 const localTime = document.getElementById("localTime");
-const utcTime = document.getElementById("utcTime");
+const utcTime   = document.getElementById("utcTime");
 
 function updateClocks(){
   const now = new Date();
@@ -60,15 +81,21 @@ function updateClocks(){
     String(now.getUTCMinutes()).padStart(2,'0') + ":" +
     String(now.getUTCSeconds()).padStart(2,'0');
 }
+setInterval(updateClocks,1000);
+updateClocks();
+
+// ===== METAR / TAF (CHEMIN QUI MARCHAIT) =====
+const magentaText  = document.getElementById("magentaText");
+const tontoutaText = document.getElementById("tontoutaText");
+
+function cors(url){
+  return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+}
 
 async function fetchText(url){
   const r = await fetch(url,{cache:"no-store"});
   if(!r.ok) throw new Error(r.status);
   return await r.text();
-}
-
-function cors(url){
-  return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
 }
 
 async function updateMetarTaf(){
@@ -94,8 +121,7 @@ async function updateMetarTaf(){
 
 updateMetarTaf();
 setInterval(updateMetarTaf, 10*60*1000);
-setInterval(updateClocks,1000);
-updateClocks();
 </script>
+
 </body>
 </html>
