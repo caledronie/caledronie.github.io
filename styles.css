@@ -1194,3 +1194,69 @@ nav a:focus{
   color: rgba(255,255,255,0.95) !important;
   outline: none !important;
 }
+/* ===== ACCENTS VERTS ===== */
+
+.accent-green {
+  color: var(--accent);
+}
+
+/* Titres des cartes météo */
+.weather-card h2 {
+  position: relative;
+  padding-left: 10px;
+}
+
+.weather-card h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+/* ===== AJOUT ACCENTS VERTS (SANS TOUCHER AU HTML) ===== */
+
+/* Couleur verte principale */
+:root {
+  --accent: #7dff9a;
+}
+
+/* Titre principal "Météo aéronautique" */
+h1 {
+  background: linear-gradient(90deg, var(--accent), #b4ffcc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Titres des cartes (Magenta, Tontouta, Infos utiles) */
+.weather-card h2 {
+  color: var(--accent);
+  position: relative;
+  padding-left: 12px;
+}
+
+.weather-card h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* Onglet Contact dans le menu */
+nav a.btn {
+  background: rgba(125,255,154,0.2);
+  border: 1px solid rgba(125,255,154,0.5);
+  color: var(--accent);
+}
+
+/* Onglet Météo actif */
+nav a.active {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
