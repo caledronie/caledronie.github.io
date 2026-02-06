@@ -122,6 +122,18 @@
       nav ul{flex-wrap:wrap;gap:12px}
       .weather-grid{grid-template-columns:1fr}
     }
+    /* ===== FOND IMAGE METEO ===== */
+.meteo-bg{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(10,15,20,0.72), rgba(10,15,20,0.82)),
+    url("/images/meteo-bg.jpg") center/cover no-repeat;
+}
+
+/* sécurité : le contenu reste au-dessus */
+body{ position: relative; z-index: 0; }
   </style>
 </head>
 
