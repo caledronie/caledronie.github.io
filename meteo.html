@@ -2,111 +2,178 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Météo aéronautique – Caledronie</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Météo aéronautique - Caledronie</title>
 
-  <!-- Ton CSS global -->
-  <link rel="stylesheet" href="styles.css?v=999" />
+  <style>
+    /* ====== Base ====== */
+    :root{
+      --bg:#0b0f14;
+      --text:#e9eef5;
+      --muted:rgba(233,238,245,.72);
+      --glass:rgba(255,255,255,.06);
+      --glass2:rgba(255,255,255,.09);
+      --line:rgba(255,255,255,.12);
+      --accent:#7dff9a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(125,255,154,.12), transparent 55%),
+                  radial-gradient(900px 500px at 90% 10%, rgba(120,180,255,.12), transparent 55%),
+                  var(--bg);
+      min-height:100vh;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 18px}
+
+    /* ====== Header / Nav ====== */
+    header{
+      position:sticky; top:0;
+      backdrop-filter: blur(12px);
+      background: rgba(10,14,20,.55);
+      border-bottom:1px solid var(--line);
+      z-index:10;
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .brand-badge{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg, rgba(125,255,154,.35), rgba(120,180,255,.25));
+      border:1px solid var(--line);
+    }
+    nav ul{
+      list-style:none; margin:0; padding:0;
+      display:flex; align-items:center; gap:18px;
+      font-weight:600;
+      color:rgba(233,238,245,.85);
+    }
+    nav a{opacity:.9}
+    nav a:hover{opacity:1}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(125,255,154,.18);
+      border:1px solid rgba(125,255,154,.35);
+      font-weight:800;
+    }
+    .btn:hover{background: rgba(125,255,154,.24)}
+    .active{
+      color:var(--text);
+      border-bottom:2px solid rgba(125,255,154,.55);
+      padding-bottom:6px;
+    }
+
+    /* ====== Page météo ====== */
+    main.meteo-page{padding:26px 0 44px}
+    h1{
+      margin:20px 0 18px;
+      font-size:46px;
+      letter-spacing:-.5px;
+    }
+
+    .weather-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:14px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .weather-grid{grid-template-columns:1fr}
+      h1{font-size:36px}
+      nav ul{flex-wrap:wrap; gap:12px}
+    }
+
+    .weather-card{
+      border-radius:16px;
+      border:1px solid var(--line);
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding:16px 16px 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .weather-card h2{
+      margin:0 0 10px;
+      font-size:18px;
+      color:rgba(233,238,245,.95);
+    }
+
+    pre{
+      margin:0;
+      padding:12px;
+      border-radius:14px;
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.08);
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:13px;
+      line-height:1.35;
+      color:rgba(233,238,245,.92);
+      min-height: 140px;
+    }
+
+    .infos .info-row{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .infos .info-row:last-of-type{border-bottom:none}
+    .infos span{color:var(--muted)}
+    .infos strong{font-size:15px}
+    .info-sub{
+      margin-top:8px;
+      font-size:12px;
+      color:rgba(233,238,245,.7);
+    }
+    .kp-pill{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-width:44px;height:26px;
+      padding:0 10px;border-radius:999px;
+      background: rgba(120,180,255,.14);
+      border:1px solid rgba(120,180,255,.28);
+      font-weight:900;
+    }
+  </style>
 </head>
-<script>
-async function fetchJson(url){
-  const r = await fetch(url, { cache: "no-store" });
-  if(!r.ok) throw new Error("HTTP " + r.status);
-  return await r.json();
-}
 
-async function updateMetarTaf(){
-  const ids = "NWWM,NWWW";
+<body>
 
-  const metarUrl = `https://aviationweather.gov/api/data/metar?ids=${ids}&format=json&hours=3&mostRecent=true&_=${Date.now()}`;
-  const tafUrl   = `https://aviationweather.gov/api/data/taf?ids=${ids}&format=json&hours=12&mostRecent=true&_=${Date.now()}`;
+  <!-- ===== Header / Nav ===== -->
+  <header>
+    <div class="container">
+      <div class="topbar">
+        <a class="brand" href="index.html">
+          <span class="brand-badge"></span>
+          <span>Caledronie</span>
+        </a>
 
-  try {
-    const metars = await fetchJson(metarUrl);
-    const tafs   = await fetchJson(tafUrl);
-
-    const mNWWM = metars.find(x => x.icaoId === "NWWM");
-    const mNWWW = metars.find(x => x.icaoId === "NWWW");
-    const tNWWM = tafs.find(x => x.icaoId === "NWWM");
-    const tNWWW = tafs.find(x => x.icaoId === "NWWW");
-
-    document.getElementById("magentaText").textContent =
-      (mNWWM?.rawOb || "METAR indisponible") + "\n\n" +
-      (tNWWM?.rawTAF || "TAF indisponible");
-
-    document.getElementById("tontoutaText").textContent =
-      (mNWWW?.rawOb || "METAR indisponible") + "\n\n" +
-      (tNWWW?.rawTAF || "TAF indisponible");
-
-  } catch(e){
-    document.getElementById("magentaText").textContent = "Erreur METAR/TAF";
-    document.getElementById("tontoutaText").textContent = "Erreur METAR/TAF";
-  }
-}
-
-async function updateKp(){
-  const url = `https://services.swpc.noaa.gov/json/planetary_k_index_1m.json?_=${Date.now()}`;
-  try{
-    const arr = await fetchJson(url);
-    const last = arr[arr.length - 1];
-
-    document.getElementById("kpValue").textContent = last?.kp_index ?? "--";
-    document.getElementById("kpTime").textContent =
-      "Mise à jour : " + (last?.time_tag ? new Date(last.time_tag).toLocaleString() : "--");
-
-  } catch(e){
-    document.getElementById("kpValue").textContent = "--";
-    document.getElementById("kpTime").textContent = "Mise à jour : --";
-  }
-}
-
-function updateClocks(){
-  const now = new Date();
-  document.getElementById("localTime").textContent = now.toLocaleTimeString();
-  document.getElementById("utcTime").textContent =
-    now.getUTCHours().toString().padStart(2,'0') + ":" +
-    now.getUTCMinutes().toString().padStart(2,'0') + ":" +
-    now.getUTCSeconds().toString().padStart(2,'0');
-}
-
-async function refreshAll(){
-  await Promise.allSettled([ updateMetarTaf(), updateKp() ]);
-}
-
-refreshAll();
-setInterval(refreshAll, 10 * 60 * 1000);
-setInterval(updateClocks, 1000);
-updateClocks();
-</script>
-  
-  <body>
-
-  <!-- ===== TOP NAV (onglets) ===== -->
-  <header class="topbar">
-    <div class="container topbar__inner">
-      <a class="brand" href="index.html#accueil" aria-label="Retour à l'accueil">
-        <img src="logo.jpg" alt="Caledronie" class="brand__logo">
-        <span class="brand__text">
-          <span class="brand__name">Caledronie</span>
-          <span class="brand__tag">Formation drone professionnel</span>
-        </span>
-      </a>
-
-      <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" type="button">☰</button>
-
-      <nav class="nav" id="siteNav">
-        <a href="index.html#accueil">Accueil</a>
-        <a href="index.html#formations">Formations</a>
-        <a href="index.html#temoignages">Témoignages</a>
-        <a href="index.html#galerie">Galerie</a>
-        <a href="index.html#apropos">À propos</a>
-        <a href="meteo.html" aria-current="page">Météo</a>
-        <a href="index.html#contact" class="btn">Contact</a>
-      </nav>
+        <nav>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="formations.html">Formations</a></li>
+            <li><a href="temoignages.html">Témoignages</a></li>
+            <li><a href="galerie.html">Galerie</a></li>
+            <li><a href="apropos.html">À propos</a></li>
+            <li><a class="active" href="meteo.html">Météo</a></li>
+            <li><a class="btn" href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </header>
 
-  <!-- ===== PAGE ===== -->
+  <!-- ===== Page météo ===== -->
   <main class="meteo-page container">
     <h1>Météo aéronautique</h1>
 
@@ -115,298 +182,194 @@ updateClocks();
       <!-- MAGENTA -->
       <section class="weather-card glass">
         <h2>Nouméa Magenta (NWWM)</h2>
-        <pre id="magentaText">METAR / TAF à venir…</pre>
+        <pre id="magentaText">Chargement METAR/TAF…</pre>
       </section>
 
       <!-- TONTOUTA -->
       <section class="weather-card glass">
         <h2>Nouméa Tontouta (NWWW)</h2>
-        <pre id="tontoutaText">METAR / TAF à venir…</pre>
+        <pre id="tontoutaText">Chargement METAR/TAF…</pre>
       </section>
 
       <!-- INFOS UTILES -->
       <section class="weather-card glass infos">
         <h2>Infos utiles</h2>
 
-        <div class="info-row"><span>Heure locale</span><strong id="localTime">--:--:--</strong></div>
-        <div class="info-row"><span>Heure UTC</span><strong id="utcTime">--:--:--</strong></div>
+        <div class="info-row">
+          <span>Heure locale</span>
+          <strong id="localTime">--:--:--</strong>
+        </div>
 
-        <div class="info-row"><span>Indice Kp</span><strong id="kpValue">—</strong></div>
-        <div class="info-sub" id="kpTime">Mise à jour : —</div>
+        <div class="info-row">
+          <span>Heure UTC</span>
+          <strong id="utcTime">--:--:--</strong>
+        </div>
 
-        <div style="height:12px"></div>
+        <div class="info-row">
+          <span>Indice Kp</span>
+          <strong class="kp-pill" id="kpValue">--</strong>
+        </div>
 
-        <div class="info-row"><span>Nuit aéronautique</span><strong id="aeroNight">—</strong></div>
-        <div class="info-sub" id="aeroNightTimes">Début : — • Fin : —</div>
-        <div class="info-sub" style="opacity:.65">Calcul : soleil ≤ −6° (Nouméa)</div>
+        <div class="info-sub" id="kpTime">Mise à jour : --</div>
+
+        <div style="height:10px"></div>
+
+        <div class="info-row">
+          <span>Nuit aéronautique</span>
+          <strong id="nightStatus">--</strong>
+        </div>
+
+        <div class="info-sub" id="nightWindow">Début : -- • Fin : --</div>
+        <div class="info-sub">Calcul : soleil ≤ -6° (Nouméa)</div>
       </section>
 
     </div>
   </main>
 
-  <!-- ===== SCRIPTS ===== -->
+  <!-- ===== Script unique météo ===== -->
   <script>
-    /* ===== MENU MOBILE ===== */
-    (() => {
-      const burger = document.getElementById("burger");
-      const nav = document.getElementById("siteNav");
-      if (!burger || !nav) return;
+  // Empêche les doublons
+  if (window.__wxRunning) {
+    console.log("Météo déjà démarrée (doublon évité)");
+  } else {
+    window.__wxRunning = true;
 
-      burger.addEventListener("click", () => {
-        const open = nav.classList.toggle("is-open");
-        burger.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-    })();
+    const IDS = "NWWM,NWWW";
+    const REFRESH_MS = 10 * 60 * 1000;
 
-    /* ===== CONFIG ===== */
-    const TIMEZONE = "Pacific/Noumea";
-    const NOUMEA = { lat: -22.2758, lon: 166.4580 };
-    const AERO_SUN_ALT_DEG = -6; // ✅ nuit aéronautique à -6°
+    // Nouméa (approx)
+    const LAT = -22.2758;
+    const LON = 166.4580;
 
-    /* ===== HORLOGES (locale + UTC) ===== */
-    function updateClocks() {
-      const now = new Date();
+    const elMagenta  = document.getElementById("magentaText");
+    const elTontouta = document.getElementById("tontoutaText");
+    const elKpValue  = document.getElementById("kpValue");
+    const elKpTime   = document.getElementById("kpTime");
+    const elLocal    = document.getElementById("localTime");
+    const elUTC      = document.getElementById("utcTime");
+    const elNight    = document.getElementById("nightStatus");
+    const elNightWin = document.getElementById("nightWindow");
 
-      const local = new Intl.DateTimeFormat("fr-FR", {
-        timeZone: TIMEZONE, hour: "2-digit", minute: "2-digit", second: "2-digit"
-      }).format(now);
+    function pad2(n){ return String(n).padStart(2,'0'); }
 
-      const utc = new Intl.DateTimeFormat("fr-FR", {
-        timeZone: "UTC", hour: "2-digit", minute: "2-digit", second: "2-digit"
-      }).format(now);
-
-      const elLocal = document.getElementById("localTime");
-      const elUtc = document.getElementById("utcTime");
-      if (elLocal) elLocal.textContent = local;
-      if (elUtc) elUtc.textContent = utc;
+    function cors(url){
+      return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
     }
+
+    async function fetchJson(url){
+      const r = await fetch(url, { cache:"no-store" });
+      if(!r.ok) throw new Error("HTTP " + r.status);
+      return await r.json();
+    }
+
+    async function fetchText(url){
+      const r = await fetch(url, { cache:"no-store" });
+      if(!r.ok) throw new Error("HTTP " + r.status);
+      return await r.text();
+    }
+
+    // Fallback texte NOAA (si jamais)
+    async function metarTafFallbackTxt(icao){
+      const metarTxt = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/observations/metar/stations/${icao}.TXT`));
+      const tafTxt   = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/${icao}.TXT`));
+      const mLines = metarTxt.trim().split("\n");
+      const tLines = tafTxt.trim().split("\n");
+      const metar = (mLines.slice(1).join("\n") || metarTxt.trim());
+      const taf   = (tLines.slice(1).join("\n") || tafTxt.trim());
+      return { metar, taf };
+    }
+
+    async function updateMetarTaf(){
+      // On tente AviationWeather (JSON)
+      try{
+        const metarUrl = cors(`https://aviationweather.gov/api/data/metar?ids=${IDS}&format=json&hours=3&mostRecent=true&_=${Date.now()}`);
+        const tafUrl   = cors(`https://aviationweather.gov/api/data/taf?ids=${IDS}&format=json&hours=12&mostRecent=true&_=${Date.now()}`);
+
+        const metars = await fetchJson(metarUrl);
+        const tafs   = await fetchJson(tafUrl);
+
+        const mNWWM = metars.find(x => x.icaoId === "NWWM");
+        const mNWWW = metars.find(x => x.icaoId === "NWWW");
+        const tNWWM = tafs.find(x => x.icaoId === "NWWM");
+        const tNWWW = tafs.find(x => x.icaoId === "NWWW");
+
+        elMagenta.textContent =
+          (mNWWM?.rawOb || "METAR indisponible") + "\n\n" +
+          (tNWWM?.rawTAF || "TAF indisponible");
+
+        elTontouta.textContent =
+          (mNWWW?.rawOb || "METAR indisponible") + "\n\n" +
+          (tNWWW?.rawTAF || "TAF indisponible");
+
+        return;
+      } catch(e){
+        // Si AviationWeather bloque / change, on fallback NOAA TXT
+        try{
+          const mag = await metarTafFallbackTxt("NWWM");
+          const ton = await metarTafFallbackTxt("NWWW");
+
+          elMagenta.textContent = mag.metar + "\n\n" + mag.taf;
+          elTontouta.textContent = ton.metar + "\n\n" + ton.taf;
+          return;
+        } catch(e2){
+          elMagenta.textContent = "Erreur METAR/TAF";
+          elTontouta.textContent = "Erreur METAR/TAF";
+        }
+      }
+    }
+
+    async function updateKp(){
+      try{
+        const arr = await fetchJson(`https://services.swpc.noaa.gov/json/planetary_k_index_1m.json?_=${Date.now()}`);
+        // dernière valeur valide
+        const last = [...arr].reverse().find(x => x && x.kp_index != null);
+        elKpValue.textContent = last?.kp_index ?? "--";
+        elKpTime.textContent = "Mise à jour : " + (last?.time_tag ? new Date(last.time_tag).toLocaleString() : "--");
+      } catch(e){
+        elKpValue.textContent = "--";
+        elKpTime.textContent = "Mise à jour : --";
+      }
+    }
+
+    function updateClocks(){
+      const now = new Date();
+      elLocal.textContent = now.toLocaleTimeString();
+      elUTC.textContent = pad2(now.getUTCHours()) + ":" + pad2(now.getUTCMinutes()) + ":" + pad2(now.getUTCSeconds());
+    }
+
+    async function updateNight(){
+      try{
+        const j = await fetchJson(`https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`);
+        if(j.status !== "OK") throw new Error("Sun API");
+        const sunrise = new Date(j.results.sunrise);
+        const sunset  = new Date(j.results.sunset);
+
+        // approx -6°: marge 30 min
+        const start = new Date(sunset.getTime() + 30*60000);
+        const end   = new Date(sunrise.getTime() - 30*60000);
+
+        const now = new Date();
+        const isNight = (now >= start) || (now <= end);
+
+        elNight.textContent = isNight ? "NUIT" : "JOUR";
+        elNightWin.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
+      } catch(e){
+        elNight.textContent = "--";
+        elNightWin.textContent = "Début : -- • Fin : --";
+      }
+    }
+
+    async function refreshAll(){
+      await Promise.allSettled([ updateMetarTaf(), updateKp(), updateNight() ]);
+    }
+
+    // Start
+    refreshAll();
     updateClocks();
+
+    setInterval(refreshAll, REFRESH_MS);
     setInterval(updateClocks, 1000);
-
-    /* ===== INDICE KP (NOAA SWPC) ===== */
-    async function updateKp() {
-      try {
-        const r = await fetch("https://services.swpc.noaa.gov/json/planetary_k_index_1m.json", { cache: "no-store" });
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        const d = await r.json();
-        const last = d[d.length - 1];
-
-        const elKp = document.getElementById("kpValue");
-        const elKt = document.getElementById("kpTime");
-        if (elKp) elKp.textContent = (last?.kp_index ?? "—");
-        if (elKt) elKt.textContent = "Mise à jour : " + (last?.time_tag ?? "—");
-      } catch (e) {
-        const elKp = document.getElementById("kpValue");
-        const elKt = document.getElementById("kpTime");
-        if (elKp) elKp.textContent = "—";
-        if (elKt) elKt.textContent = "Mise à jour : —";
-      }
-    }
-    updateKp();
-    setInterval(updateKp, 10 * 60 * 1000);
-
-    /* ===== METAR / TAF (multi-sources stable) ===== */
-    const METEO_SOURCES = {
-      magenta: {
-        metar: [
-          "https://metar.vatsim.net/metar/NWWM",
-          "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT"
-        ],
-        taf: [
-          "https://metar.vatsim.net/taf/NWWM",
-          "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"
-        ]
-      },
-      tontouta: {
-        metar: [
-          "https://metar.vatsim.net/metar/NWWW",
-          "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT"
-        ],
-        taf: [
-          "https://metar.vatsim.net/taf/NWWW",
-          "https://r.jina.ai/http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"
-        ]
-      }
-    };
-
-    async function fetchTxt(url) {
-      const u = url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
-      const r = await fetch(u, { cache: "no-store" });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return (await r.text()).trim();
-    }
-
-    function pickLine(txt, station) {
-      const lines = (txt || "").split("\n").map(l => l.trim()).filter(Boolean);
-
-      // cas jina markdown : on veut juste la ligne utile
-      const met = lines.find(l => l.startsWith(station + " "));
-      if (met) return met;
-
-      const taf = lines.find(l => l.startsWith("TAF " + station));
-      if (taf) return taf;
-
-      // cas VATSIM : souvent déjà propre (une ligne)
-      if (lines.length === 1) return lines[0];
-
-      // fallback : première ligne non vide
-      return lines[0] || "Donnée indisponible";
-    }
-
-    async function tryFetch(urls, station) {
-      for (const url of urls) {
-        try {
-          const t = await fetchTxt(url);
-          const line = pickLine(t, station);
-          if (line && line !== "Donnée indisponible") return line;
-        } catch (e) {}
-      }
-      return "Donnée indisponible";
-    }
-
-    async function updateMetarTaf() {
-      const elM = document.getElementById("magentaText");
-      const elT = document.getElementById("tontoutaText");
-      if (elM) elM.textContent = "Chargement METAR/TAF…";
-      if (elT) elT.textContent = "Chargement METAR/TAF…";
-
-      const [mMetar, mTaf, tMetar, tTaf] = await Promise.all([
-        tryFetch(METEO_SOURCES.magenta.metar, "NWWM"),
-        tryFetch(METEO_SOURCES.magenta.taf,   "NWWM"),
-        tryFetch(METEO_SOURCES.tontouta.metar, "NWWW"),
-        tryFetch(METEO_SOURCES.tontouta.taf,   "NWWW"),
-      ]);
-
-      if (elM) elM.textContent = `METAR\n${mMetar}\n\nTAF\n${mTaf}`;
-      if (elT) elT.textContent = `METAR\n${tMetar}\n\nTAF\n${tTaf}`;
-    }
-    updateMetarTaf();
-    setInterval(updateMetarTaf, 10 * 60 * 1000);
-
-    /* ===== NUIT AÉRONAUTIQUE (calcul journalier -6°) =====
-       Méthode stable (équation du temps + déclinaison) :
-       - calcule l'heure où le soleil atteint l'altitude AERO_SUN_ALT_DEG
-       - soir = début, matin = fin
-    */
-    const TZ_OFFSET_HOURS = 11; // Nouméa UTC+11
-
-    function deg2rad(d){ return d * Math.PI / 180; }
-    function rad2deg(r){ return r * 180 / Math.PI; }
-
-    function dayOfYearUTC(date){
-      const start = Date.UTC(date.getUTCFullYear(), 0, 1);
-      const now = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-      return Math.floor((now - start) / 86400000) + 1;
-    }
-
-    function computeSunEventMinutesLocal(dateUTC, lat, lon, tzOffsetHours, sunAltitudeDeg){
-      const N = dayOfYearUTC(dateUTC);
-      const gamma = 2 * Math.PI / 365 * (N - 1); // jour
-
-      const eqtime = 229.18 * (
-        0.000075 +
-        0.001868 * Math.cos(gamma) -
-        0.032077 * Math.sin(gamma) -
-        0.014615 * Math.cos(2 * gamma) -
-        0.040849 * Math.sin(2 * gamma)
-      );
-
-      const decl = (
-        0.006918 -
-        0.399912 * Math.cos(gamma) +
-        0.070257 * Math.sin(gamma) -
-        0.006758 * Math.cos(2 * gamma) +
-        0.000907 * Math.sin(2 * gamma) -
-        0.002697 * Math.cos(3 * gamma) +
-        0.00148  * Math.sin(3 * gamma)
-      );
-
-      const latRad = deg2rad(lat);
-
-      const zenithDeg = 90 - sunAltitudeDeg;
-      const zenithRad = deg2rad(zenithDeg);
-
-      const cosH =
-        (Math.cos(zenithRad) - Math.sin(latRad) * Math.sin(decl)) /
-        (Math.cos(latRad) * Math.cos(decl));
-
-      const cosHc = Math.min(1, Math.max(-1, cosH));
-      const H = Math.acos(cosHc);
-      const Hdeg = rad2deg(H);
-
-      const solarNoonMin = 720 - 4 * lon - eqtime + tzOffsetHours * 60;
-
-      const morningMin = solarNoonMin - 4 * Hdeg; // fin nuit (matin)
-      const eveningMin = solarNoonMin + 4 * Hdeg; // début nuit (soir)
-
-      return { morningMin, eveningMin };
-    }
-
-    function minToHHMM(min){
-      let m = Math.round(min) % 1440;
-      if (m < 0) m += 1440;
-      const hh = String(Math.floor(m / 60)).padStart(2, "0");
-      const mm = String(m % 60).padStart(2, "0");
-      return `${hh}:${mm}`;
-    }
-
-    function toMin(hhmm){
-      const [h,m] = hhmm.split(":").map(Number);
-      return h*60 + m;
-    }
-
-    function getLocalHHMM(){
-      const now = new Date();
-      return new Intl.DateTimeFormat("fr-FR", {
-        timeZone: TIMEZONE, hour: "2-digit", minute: "2-digit"
-      }).format(now);
-    }
-
-    let aeroStartHHMM = null;
-    let aeroEndHHMM = null;
-    let aeroDayKey = null;
-
-    function computeAeroTimesForToday(){
-      const now = new Date();
-      const dayKey = new Intl.DateTimeFormat("fr-FR", {
-        timeZone: TIMEZONE, year:"numeric", month:"2-digit", day:"2-digit"
-      }).format(now);
-
-      if (dayKey === aeroDayKey && aeroStartHHMM && aeroEndHHMM) return;
-      aeroDayKey = dayKey;
-
-      // date UTC du jour (approx stable pour ce calcul)
-      const dUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-
-      const { morningMin, eveningMin } = computeSunEventMinutesLocal(
-        dUTC, NOUMEA.lat, NOUMEA.lon, TZ_OFFSET_HOURS, AERO_SUN_ALT_DEG
-      );
-
-      aeroStartHHMM = minToHHMM(eveningMin);
-      aeroEndHHMM   = minToHHMM(morningMin);
-    }
-
-    function updateAeroNight(){
-      computeAeroTimesForToday();
-
-      const stateEl = document.getElementById("aeroNight");
-      const timesEl = document.getElementById("aeroNightTimes");
-      if (!stateEl || !timesEl) return;
-
-      const nowHHMM = getLocalHHMM();
-      const n = toMin(nowHHMM);
-      const s = toMin(aeroStartHHMM);
-      const e = toMin(aeroEndHHMM);
-
-      const crossesMidnight = s > e;
-      const isNight = crossesMidnight ? (n >= s || n < e) : (n >= s && n < e);
-
-      stateEl.textContent = isNight ? "NUIT" : "JOUR";
-      timesEl.textContent = `Début : ${aeroStartHHMM} • Fin : ${aeroEndHHMM}`;
-    }
-
-    updateAeroNight();
-    setInterval(updateAeroNight, 60 * 1000);
+  }
   </script>
 
 </body>
