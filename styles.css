@@ -1325,3 +1325,25 @@ body.meteo-page-bg {
   }
 
 }
+/* ===== ALIGNEMENT MENU PRINCIPAL ===== */
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.main-nav a.active {
+  color: #7CFFB2;
+  border-bottom: 2px solid #7CFFB2;
+}
