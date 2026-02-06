@@ -6,13 +6,11 @@
   <title>Météo aéronautique - Caledronie</title>
 
   <style>
-    /* ====== Base ====== */
     :root{
       --bg:#0b0f14;
       --text:#e9eef5;
       --muted:rgba(233,238,245,.72);
       --glass:rgba(255,255,255,.06);
-      --glass2:rgba(255,255,255,.09);
       --line:rgba(255,255,255,.12);
       --accent:#7dff9a;
     }
@@ -29,7 +27,6 @@
     a{color:inherit;text-decoration:none}
     .container{max-width:1100px;margin:0 auto;padding:0 18px}
 
-    /* ====== Header / Nav ====== */
     header{
       position:sticky; top:0;
       backdrop-filter: blur(12px);
@@ -41,11 +38,7 @@
       display:flex; align-items:center; justify-content:space-between;
       padding:14px 0;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:800;
-      letter-spacing:.2px;
-    }
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800}
     .brand-badge{
       width:34px;height:34px;border-radius:10px;
       background:linear-gradient(135deg, rgba(125,255,154,.35), rgba(120,180,255,.25));
@@ -74,12 +67,11 @@
       padding-bottom:6px;
     }
 
-    /* ====== Page météo ====== */
     main.meteo-page{padding:26px 0 44px}
-    h1{
-      margin:20px 0 18px;
-      font-size:46px;
-      letter-spacing:-.5px;
+    h1{margin:20px 0 18px;font-size:46px;letter-spacing:-.5px}
+    @media (max-width: 980px){
+      h1{font-size:36px}
+      nav ul{flex-wrap:wrap; gap:12px}
     }
 
     .weather-grid{
@@ -88,11 +80,7 @@
       gap:14px;
       align-items:stretch;
     }
-    @media (max-width: 980px){
-      .weather-grid{grid-template-columns:1fr}
-      h1{font-size:36px}
-      nav ul{flex-wrap:wrap; gap:12px}
-    }
+    @media (max-width: 980px){ .weather-grid{grid-template-columns:1fr} }
 
     .weather-card{
       border-radius:16px;
@@ -102,11 +90,7 @@
       padding:16px 16px 14px;
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .weather-card h2{
-      margin:0 0 10px;
-      font-size:18px;
-      color:rgba(233,238,245,.95);
-    }
+    .weather-card h2{margin:0 0 10px;font-size:18px}
 
     pre{
       margin:0;
@@ -128,14 +112,9 @@
       padding:10px 0;
       border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .infos .info-row:last-of-type{border-bottom:none}
     .infos span{color:var(--muted)}
     .infos strong{font-size:15px}
-    .info-sub{
-      margin-top:8px;
-      font-size:12px;
-      color:rgba(233,238,245,.7);
-    }
+    .info-sub{margin-top:8px;font-size:12px;color:rgba(233,238,245,.7)}
     .kp-pill{
       display:inline-flex;align-items:center;justify-content:center;
       min-width:44px;height:26px;
@@ -149,7 +128,6 @@
 
 <body>
 
-  <!-- ===== Header / Nav ===== -->
   <header>
     <div class="container">
       <div class="topbar">
@@ -173,25 +151,20 @@
     </div>
   </header>
 
-  <!-- ===== Page météo ===== -->
   <main class="meteo-page container">
     <h1>Météo aéronautique</h1>
 
     <div class="weather-grid">
-
-      <!-- MAGENTA -->
       <section class="weather-card glass">
         <h2>Nouméa Magenta (NWWM)</h2>
         <pre id="magentaText">Chargement METAR/TAF…</pre>
       </section>
 
-      <!-- TONTOUTA -->
       <section class="weather-card glass">
         <h2>Nouméa Tontouta (NWWW)</h2>
         <pre id="tontoutaText">Chargement METAR/TAF…</pre>
       </section>
 
-      <!-- INFOS UTILES -->
       <section class="weather-card glass infos">
         <h2>Infos utiles</h2>
 
@@ -209,7 +182,6 @@
           <span>Indice Kp</span>
           <strong class="kp-pill" id="kpValue">--</strong>
         </div>
-
         <div class="info-sub" id="kpTime">Mise à jour : --</div>
 
         <div style="height:10px"></div>
@@ -218,48 +190,37 @@
           <span>Nuit aéronautique</span>
           <strong id="nightStatus">--</strong>
         </div>
-
         <div class="info-sub" id="nightWindow">Début : -- • Fin : --</div>
         <div class="info-sub">Calcul : soleil ≤ -6° (Nouméa)</div>
       </section>
-
     </div>
   </main>
 
-  <!-- ===== Script unique météo ===== -->
   <script>
-  // Empêche les doublons
-  if (window.__wxRunning) {
-    console.log("Météo déjà démarrée (doublon évité)");
-  } else {
+  // ====== Météo stable (METAR/TAF OK) + horloges + nuit ======
+  if (!window.__wxRunning) {
     window.__wxRunning = true;
 
-    const IDS = "NWWM,NWWW";
     const REFRESH_MS = 10 * 60 * 1000;
 
-    // Nouméa (approx)
+    // Nouméa approx
     const LAT = -22.2758;
     const LON = 166.4580;
 
-    const elMagenta  = document.getElementById("magentaText");
-    const elTontouta = document.getElementById("tontoutaText");
-    const elKpValue  = document.getElementById("kpValue");
-    const elKpTime   = document.getElementById("kpTime");
-    const elLocal    = document.getElementById("localTime");
-    const elUTC      = document.getElementById("utcTime");
-    const elNight    = document.getElementById("nightStatus");
-    const elNightWin = document.getElementById("nightWindow");
+    const magentaText = document.getElementById("magentaText");
+    const tontoutaText = document.getElementById("tontoutaText");
 
-    function pad2(n){ return String(n).padStart(2,'0'); }
+    const localTime = document.getElementById("localTime");
+    const utcTime = document.getElementById("utcTime");
+
+    const kpValue = document.getElementById("kpValue");
+    const kpTime = document.getElementById("kpTime");
+
+    const nightStatus = document.getElementById("nightStatus");
+    const nightWindow = document.getElementById("nightWindow");
 
     function cors(url){
       return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-    }
-
-    async function fetchJson(url){
-      const r = await fetch(url, { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP " + r.status);
-      return await r.json();
     }
 
     async function fetchText(url){
@@ -268,161 +229,79 @@
       return await r.text();
     }
 
-    // Fallback texte NOAA (si jamais)
-    async function metarTafFallbackTxt(icao){
-      const metarTxt = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/observations/metar/stations/${icao}.TXT`));
-      const tafTxt   = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/${icao}.TXT`));
-      const mLines = metarTxt.trim().split("\n");
-      const tLines = tafTxt.trim().split("\n");
-      const metar = (mLines.slice(1).join("\n") || metarTxt.trim());
-      const taf   = (tLines.slice(1).join("\n") || tafTxt.trim());
-      return { metar, taf };
-    }
-
-    async function updateMetarTaf(){
-      // On tente AviationWeather (JSON)
-      try{
-        const metarUrl = cors(`https://aviationweather.gov/api/data/metar?ids=${IDS}&format=json&hours=3&mostRecent=true&_=${Date.now()}`);
-        const tafUrl   = cors(`https://aviationweather.gov/api/data/taf?ids=${IDS}&format=json&hours=12&mostRecent=true&_=${Date.now()}`);
-
-        const metars = await fetchJson(metarUrl);
-        const tafs   = await fetchJson(tafUrl);
-
-        const mNWWM = metars.find(x => x.icaoId === "NWWM");
-        const mNWWW = metars.find(x => x.icaoId === "NWWW");
-        const tNWWM = tafs.find(x => x.icaoId === "NWWM");
-        const tNWWW = tafs.find(x => x.icaoId === "NWWW");
-
-        elMagenta.textContent =
-          (mNWWM?.rawOb || "METAR indisponible") + "\n\n" +
-          (tNWWM?.rawTAF || "TAF indisponible");
-
-        elTontouta.textContent =
-          (mNWWW?.rawOb || "METAR indisponible") + "\n\n" +
-          (tNWWW?.rawTAF || "TAF indisponible");
-
-        return;
-      } catch(e){
-        // Si AviationWeather bloque / change, on fallback NOAA TXT
-        try{
-          const mag = await metarTafFallbackTxt("NWWM");
-          const ton = await metarTafFallbackTxt("NWWW");
-
-          elMagenta.textContent = mag.metar + "\n\n" + mag.taf;
-          elTontouta.textContent = ton.metar + "\n\n" + ton.taf;
-          return;
-        } catch(e2){
-          elMagenta.textContent = "Erreur METAR/TAF";
-          elTontouta.textContent = "Erreur METAR/TAF";
-        }
-      }
-    }
-
-    async function updateKp(){
-  try{
-    const url = `https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json?_=${Date.now()}`;
-    const table = await fetchJson(url);
-
-    // table = [headerRow, row1, row2, ...]
-    const header = table[0];
-    const rows = table.slice(1);
-
-    const idxTime = header.indexOf("time_tag");
-    const idxKp   = header.indexOf("kp");
-    const idxObs  = header.indexOf("observed");
-
-    // priorité: dernier "observed", sinon dernier "estimated"
-    let last = [...rows].reverse().find(r => r[idxObs] === "observed");
-    if(!last) last = [...rows].reverse().find(r => r[idxObs] === "estimated");
-    if(!last) last = rows[rows.length - 1];
-
-    const kp = last?.[idxKp];
-    const t  = last?.[idxTime];
-    const obsType = last?.[idxObs];
-
-    // IMPORTANT: parseFloat (pas parseInt) sinon 4.33 devient 4, 0.67 devient 0
-    const kpNum = (kp != null) ? Number.parseFloat(kp) : null;
-
-    document.getElementById("kpValue").textContent =
-      (kpNum != null && !Number.isNaN(kpNum)) ? kpNum.toFixed(2) : "--";
-
-    document.getElementById("kpTime").textContent =
-      "Mise à jour : " + (t ?? "--") + (obsType ? ` (${obsType})` : "");
-
-  }catch(e){
-    document.getElementById("kpValue").textContent = "--";
-    document.getElementById("kpTime").textContent = "Mise à jour : --";
-  }
-} function updateKp(){
-  try{
-    const url = "https://services.swpc.noaa.gov/json/planetary_k_index_3h.json?_=" + Date.now();
-    const arr = await fetchJson(url);
-
-    // On prend la DERNIÈRE valeur valide
-    const last = [...arr].reverse().find(x => x.kp_index !== null && x.kp_index !== undefined);
-
-    kpValue.textContent = last?.kp_index ?? "--";
-    kpTime.textContent =
-      "Mise à jour : " +
-      (last?.time_tag ? new Date(last.time_tag).toLocaleString() : "--");
-
-  }catch(e){
-    kpValue.textContent = "--";
-    kpTime.textContent = "Mise à jour : --";
-  }
-} function updateKp(){
-      try{
-        const arr = await fetchJson(`https://services.swpc.noaa.gov/json/planetary_k_index_1m.json?_=${Date.now()}`);
-        // dernière valeur valide
-        const last = [...arr].reverse().find(x => x && x.kp_index != null);
-        elKpValue.textContent = last?.kp_index ?? "--";
-        elKpTime.textContent = "Mise à jour : " + (last?.time_tag ? new Date(last.time_tag).toLocaleString() : "--");
-      } catch(e){
-        elKpValue.textContent = "--";
-        elKpTime.textContent = "Mise à jour : --";
-      }
-    }
+    function pad2(n){ return String(n).padStart(2,"0"); }
 
     function updateClocks(){
       const now = new Date();
-      elLocal.textContent = now.toLocaleTimeString();
-      elUTC.textContent = pad2(now.getUTCHours()) + ":" + pad2(now.getUTCMinutes()) + ":" + pad2(now.getUTCSeconds());
+      localTime.textContent = now.toLocaleTimeString();
+      utcTime.textContent = pad2(now.getUTCHours()) + ":" + pad2(now.getUTCMinutes()) + ":" + pad2(now.getUTCSeconds());
     }
 
     async function updateNight(){
       try{
-        const j = await fetchJson(`https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`);
-        if(j.status !== "OK") throw new Error("Sun API");
+        const url = `https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`;
+        const r = await fetch(url, { cache:"no-store" });
+        const j = await r.json();
         const sunrise = new Date(j.results.sunrise);
         const sunset  = new Date(j.results.sunset);
 
-        // approx -6°: marge 30 min
         const start = new Date(sunset.getTime() + 30*60000);
         const end   = new Date(sunrise.getTime() - 30*60000);
 
         const now = new Date();
         const isNight = (now >= start) || (now <= end);
 
-        elNight.textContent = isNight ? "NUIT" : "JOUR";
-        elNightWin.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
+        nightStatus.textContent = isNight ? "NUIT" : "JOUR";
+        nightWindow.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
       } catch(e){
-        elNight.textContent = "--";
-        elNightWin.textContent = "Début : -- • Fin : --";
+        nightStatus.textContent = "--";
+        nightWindow.textContent = "Début : -- • Fin : --";
       }
     }
 
-    async function refreshAll(){
-      await Promise.allSettled([ updateMetarTaf(), updateKp(), updateNight() ]);
+    async function loadNoaaTxt(icao){
+      // NOAA TGFTP (texte), très stable + proxy CORS
+      const metar = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/observations/metar/stations/${icao}.TXT?_=${Date.now()}`));
+      const taf   = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/${icao}.TXT?_=${Date.now()}`));
+
+      const m = metar.trim().split("\n");
+      const t = taf.trim().split("\n");
+
+      return {
+        metar: (m.slice(1).join("\n") || metar.trim()),
+        taf:   (t.slice(1).join("\n") || taf.trim()),
+      };
     }
 
-    // Start
-    refreshAll();
-    updateClocks();
+    async function updateMetarTaf(){
+      try{
+        const mag = await loadNoaaTxt("NWWM");
+        const ton = await loadNoaaTxt("NWWW");
 
+        magentaText.textContent = mag.metar + "\n\n" + mag.taf;
+        tontoutaText.textContent = ton.metar + "\n\n" + ton.taf;
+      } catch(e){
+        magentaText.textContent = "Erreur METAR/TAF";
+        tontoutaText.textContent = "Erreur METAR/TAF";
+      }
+    }
+
+    function updateKpStableOff(){
+      // Kp désactivé volontairement (stable) : on évite de casser la page
+      kpValue.textContent = "--";
+      kpTime.textContent = "Mise à jour : --";
+    }
+
+    async function refreshAll(){
+      await Promise.allSettled([ updateMetarTaf(), updateNight() ]);
+      updateKpStableOff();
+    }
+
+    refreshAll();
     setInterval(refreshAll, REFRESH_MS);
     setInterval(updateClocks, 1000);
+    updateClocks();
   }
   </script>
-
 </body>
 </html>
