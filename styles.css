@@ -1263,3 +1263,10 @@ header nav .btn {
   border: 1px solid rgba(125,255,154,0.45) !important;
   color: #7dff9a !important;
 }
+/* ===== FOND IMAGE SPÉCIFIQUE PAGE METEO ===== */
+
+body.meteo-page-bg {
+  background:
+    linear-gradient(rgba(10,15,20,0.72), rgba(10,15,20,0.82)),
+    url("/images/meteo-bg.jpg") center/cover no-repeat fixed !important;
+}
