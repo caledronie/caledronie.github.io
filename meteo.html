@@ -1,307 +1,101 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Météo aéronautique - Caledronie</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Météo aéronautique - Caledronie</title>
 
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --text:#e9eef5;
-      --muted:rgba(233,238,245,.72);
-      --glass:rgba(255,255,255,.06);
-      --line:rgba(255,255,255,.12);
-      --accent:#7dff9a;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background: radial-gradient(1200px 700px at 20% -10%, rgba(125,255,154,.12), transparent 55%),
-                  radial-gradient(900px 500px at 90% 10%, rgba(120,180,255,.12), transparent 55%),
-                  var(--bg);
-      min-height:100vh;
-    }
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1100px;margin:0 auto;padding:0 18px}
-
-    header{
-      position:sticky; top:0;
-      backdrop-filter: blur(12px);
-      background: rgba(10,14,20,.55);
-      border-bottom:1px solid var(--line);
-      z-index:10;
-    }
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0;
-    }
-    .brand{display:flex; align-items:center; gap:10px; font-weight:800}
-    .brand-badge{
-      width:34px;height:34px;border-radius:10px;
-      background:linear-gradient(135deg, rgba(125,255,154,.35), rgba(120,180,255,.25));
-      border:1px solid var(--line);
-    }
-    nav ul{
-      list-style:none; margin:0; padding:0;
-      display:flex; align-items:center; gap:18px;
-      font-weight:600;
-      color:rgba(233,238,245,.85);
-    }
-    nav a{opacity:.9}
-    nav a:hover{opacity:1}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 14px;
-      border-radius:999px;
-      background: rgba(125,255,154,.18);
-      border:1px solid rgba(125,255,154,.35);
-      font-weight:800;
-    }
-    .btn:hover{background: rgba(125,255,154,.24)}
-    .active{
-      color:var(--text);
-      border-bottom:2px solid rgba(125,255,154,.55);
-      padding-bottom:6px;
-    }
-
-    main.meteo-page{padding:26px 0 44px}
-    h1{margin:20px 0 18px;font-size:46px;letter-spacing:-.5px}
-    @media (max-width: 980px){
-      h1{font-size:36px}
-      nav ul{flex-wrap:wrap; gap:12px}
-    }
-
-    .weather-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:14px;
-      align-items:stretch;
-    }
-    @media (max-width: 980px){ .weather-grid{grid-template-columns:1fr} }
-
-    .weather-card{
-      border-radius:16px;
-      border:1px solid var(--line);
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      padding:16px 16px 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    .weather-card h2{margin:0 0 10px;font-size:18px}
-
-    pre{
-      margin:0;
-      padding:12px;
-      border-radius:14px;
-      background: rgba(0,0,0,.28);
-      border:1px solid rgba(255,255,255,.08);
-      white-space:pre-wrap;
-      word-break:break-word;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:13px;
-      line-height:1.35;
-      color:rgba(233,238,245,.92);
-      min-height: 140px;
-    }
-
-    .infos .info-row{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:10px 0;
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .infos span{color:var(--muted)}
-    .infos strong{font-size:15px}
-    .info-sub{margin-top:8px;font-size:12px;color:rgba(233,238,245,.7)}
-    .kp-pill{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-width:44px;height:26px;
-      padding:0 10px;border-radius:999px;
-      background: rgba(120,180,255,.14);
-      border:1px solid rgba(120,180,255,.28);
-      font-weight:900;
-    }
-  </style>
+<style>
+body{margin:0;font-family:system-ui;background:#0b0f14;color:#e9eef5}
+.container{max-width:1100px;margin:auto;padding:20px}
+.weather-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.weather-card{background:rgba(255,255,255,.06);padding:16px;border-radius:14px}
+pre{background:#00000055;padding:12px;border-radius:10px;white-space:pre-wrap}
+.info-row{display:flex;justify-content:space-between;margin:8px 0}
+.info-sub{font-size:12px;opacity:.7}
+@media(max-width:900px){.weather-grid{grid-template-columns:1fr}}
+</style>
 </head>
 
 <body>
+<main class="container">
+<h1>Météo aéronautique</h1>
 
-  <header>
-    <div class="container">
-      <div class="topbar">
-        <a class="brand" href="index.html">
-          <span class="brand-badge"></span>
-          <span>Caledronie</span>
-        </a>
+<div class="weather-grid">
 
-        <nav>
-          <ul>
-            <li><a href="index.html">Accueil</a></li>
-            <li><a href="formations.html">Formations</a></li>
-            <li><a href="temoignages.html">Témoignages</a></li>
-            <li><a href="galerie.html">Galerie</a></li>
-            <li><a href="apropos.html">À propos</a></li>
-            <li><a class="active" href="meteo.html">Météo</a></li>
-            <li><a class="btn" href="contact.html">Contact</a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </header>
+<section class="weather-card">
+<h2>Nouméa Magenta (NWWM)</h2>
+<pre id="magentaText">Chargement…</pre>
+</section>
 
-  <main class="meteo-page container">
-    <h1>Météo aéronautique</h1>
+<section class="weather-card">
+<h2>Nouméa Tontouta (NWWW)</h2>
+<pre id="tontoutaText">Chargement…</pre>
+</section>
 
-    <div class="weather-grid">
-      <section class="weather-card glass">
-        <h2>Nouméa Magenta (NWWM)</h2>
-        <pre id="magentaText">Chargement METAR/TAF…</pre>
-      </section>
+<section class="weather-card">
+<h2>Infos utiles</h2>
 
-      <section class="weather-card glass">
-        <h2>Nouméa Tontouta (NWWW)</h2>
-        <pre id="tontoutaText">Chargement METAR/TAF…</pre>
-      </section>
+<div class="info-row"><span>Heure locale</span><strong id="localTime">--:--</strong></div>
+<div class="info-row"><span>Heure UTC</span><strong id="utcTime">--:--</strong></div>
+<div class="info-row"><span>Indice Kp</span><strong id="kpValue">--</strong></div>
+<div class="info-sub" id="kpTime">Mise à jour : --</div>
 
-      <section class="weather-card glass infos">
-        <h2>Infos utiles</h2>
+</section>
 
-        <div class="info-row">
-          <span>Heure locale</span>
-          <strong id="localTime">--:--:--</strong>
-        </div>
+</div>
+</main>
 
-        <div class="info-row">
-          <span>Heure UTC</span>
-          <strong id="utcTime">--:--:--</strong>
-        </div>
+<script>
+const magentaText = document.getElementById("magentaText");
+const tontoutaText = document.getElementById("tontoutaText");
+const localTime = document.getElementById("localTime");
+const utcTime = document.getElementById("utcTime");
 
-        <div class="info-row">
-          <span>Indice Kp</span>
-          <strong class="kp-pill" id="kpValue">--</strong>
-        </div>
-        <div class="info-sub" id="kpTime">Mise à jour : --</div>
+function updateClocks(){
+  const now = new Date();
+  localTime.textContent = now.toLocaleTimeString();
+  utcTime.textContent =
+    String(now.getUTCHours()).padStart(2,'0') + ":" +
+    String(now.getUTCMinutes()).padStart(2,'0') + ":" +
+    String(now.getUTCSeconds()).padStart(2,'0');
+}
 
-        <div style="height:10px"></div>
+async function fetchText(url){
+  const r = await fetch(url,{cache:"no-store"});
+  if(!r.ok) throw new Error(r.status);
+  return await r.text();
+}
 
-        <div class="info-row">
-          <span>Nuit aéronautique</span>
-          <strong id="nightStatus">--</strong>
-        </div>
-        <div class="info-sub" id="nightWindow">Début : -- • Fin : --</div>
-        <div class="info-sub">Calcul : soleil ≤ -6° (Nouméa)</div>
-      </section>
-    </div>
-  </main>
+function cors(url){
+  return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+}
 
-  <script>
-  // ====== Météo stable (METAR/TAF OK) + horloges + nuit ======
-  if (!window.__wxRunning) {
-    window.__wxRunning = true;
+async function updateMetarTaf(){
+  try{
+    const magMetar = await fetchText(cors("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWM.TXT"));
+    const magTaf   = await fetchText(cors("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWM.TXT"));
+    const tonMetar = await fetchText(cors("https://tgftp.nws.noaa.gov/data/observations/metar/stations/NWWW.TXT"));
+    const tonTaf   = await fetchText(cors("https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/NWWW.TXT"));
 
-    const REFRESH_MS = 10 * 60 * 1000;
+    magentaText.textContent =
+      magMetar.split("\n").slice(1).join("\n") + "\n\n" +
+      magTaf.split("\n").slice(1).join("\n");
 
-    // Nouméa approx
-    const LAT = -22.2758;
-    const LON = 166.4580;
+    tontoutaText.textContent =
+      tonMetar.split("\n").slice(1).join("\n") + "\n\n" +
+      tonTaf.split("\n").slice(1).join("\n");
 
-    const magentaText = document.getElementById("magentaText");
-    const tontoutaText = document.getElementById("tontoutaText");
-
-    const localTime = document.getElementById("localTime");
-    const utcTime = document.getElementById("utcTime");
-
-    const kpValue = document.getElementById("kpValue");
-    const kpTime = document.getElementById("kpTime");
-
-    const nightStatus = document.getElementById("nightStatus");
-    const nightWindow = document.getElementById("nightWindow");
-
-    function cors(url){
-      return "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-    }
-
-    async function fetchText(url){
-      const r = await fetch(url, { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP " + r.status);
-      return await r.text();
-    }
-
-    function pad2(n){ return String(n).padStart(2,"0"); }
-
-    function updateClocks(){
-      const now = new Date();
-      localTime.textContent = now.toLocaleTimeString();
-      utcTime.textContent = pad2(now.getUTCHours()) + ":" + pad2(now.getUTCMinutes()) + ":" + pad2(now.getUTCSeconds());
-    }
-
-    async function updateNight(){
-      try{
-        const url = `https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`;
-        const r = await fetch(url, { cache:"no-store" });
-        const j = await r.json();
-        const sunrise = new Date(j.results.sunrise);
-        const sunset  = new Date(j.results.sunset);
-
-        const start = new Date(sunset.getTime() + 30*60000);
-        const end   = new Date(sunrise.getTime() - 30*60000);
-
-        const now = new Date();
-        const isNight = (now >= start) || (now <= end);
-
-        nightStatus.textContent = isNight ? "NUIT" : "JOUR";
-        nightWindow.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
-      } catch(e){
-        nightStatus.textContent = "--";
-        nightWindow.textContent = "Début : -- • Fin : --";
-      }
-    }
-
-    async function loadNoaaTxt(icao){
-      // NOAA TGFTP (texte), très stable + proxy CORS
-      const metar = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/observations/metar/stations/${icao}.TXT?_=${Date.now()}`));
-      const taf   = await fetchText(cors(`https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/${icao}.TXT?_=${Date.now()}`));
-
-      const m = metar.trim().split("\n");
-      const t = taf.trim().split("\n");
-
-      return {
-        metar: (m.slice(1).join("\n") || metar.trim()),
-        taf:   (t.slice(1).join("\n") || taf.trim()),
-      };
-    }
-
-    async function updateMetarTaf(){
-      try{
-        const mag = await loadNoaaTxt("NWWM");
-        const ton = await loadNoaaTxt("NWWW");
-
-        magentaText.textContent = mag.metar + "\n\n" + mag.taf;
-        tontoutaText.textContent = ton.metar + "\n\n" + ton.taf;
-      } catch(e){
-        magentaText.textContent = "Erreur METAR/TAF";
-        tontoutaText.textContent = "Erreur METAR/TAF";
-      }
-    }
-
-    function updateKpStableOff(){
-      // Kp désactivé volontairement (stable) : on évite de casser la page
-      kpValue.textContent = "--";
-      kpTime.textContent = "Mise à jour : --";
-    }
-
-    async function refreshAll(){
-      await Promise.allSettled([ updateMetarTaf(), updateNight() ]);
-      updateKpStableOff();
-    }
-
-    refreshAll();
-    setInterval(refreshAll, REFRESH_MS);
-    setInterval(updateClocks, 1000);
-    updateClocks();
+  }catch(e){
+    magentaText.textContent = "Erreur METAR/TAF";
+    tontoutaText.textContent = "Erreur METAR/TAF";
   }
-  </script>
+}
+
+updateMetarTaf();
+setInterval(updateMetarTaf, 10*60*1000);
+setInterval(updateClocks,1000);
+updateClocks();
+</script>
 </body>
 </html>
