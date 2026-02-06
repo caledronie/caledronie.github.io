@@ -319,6 +319,23 @@
     }
 
     async function updateKp(){
+  try{
+    const url = "https://services.swpc.noaa.gov/json/planetary_k_index_3h.json?_=" + Date.now();
+    const arr = await fetchJson(url);
+
+    // On prend la DERNIÈRE valeur valide
+    const last = [...arr].reverse().find(x => x.kp_index !== null && x.kp_index !== undefined);
+
+    kpValue.textContent = last?.kp_index ?? "--";
+    kpTime.textContent =
+      "Mise à jour : " +
+      (last?.time_tag ? new Date(last.time_tag).toLocaleString() : "--");
+
+  }catch(e){
+    kpValue.textContent = "--";
+    kpTime.textContent = "Mise à jour : --";
+  }
+} function updateKp(){
       try{
         const arr = await fetchJson(`https://services.swpc.noaa.gov/json/planetary_k_index_1m.json?_=${Date.now()}`);
         // dernière valeur valide
