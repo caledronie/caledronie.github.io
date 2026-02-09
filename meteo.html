@@ -287,25 +287,27 @@ body{ position: relative; z-index: 0; }
       }
 
       async function updateNight(){
-        try{
-          const j = await fetchJson(`https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`);
-          const sunrise = new Date(j.results.sunrise);
-          const sunset  = new Date(j.results.sunset);
+  try{
+    const j = await fetchJson(
+      `https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&formatted=0&_=${Date.now()}`
+    );
 
-          const start = new Date(sunset.getTime() + 30*60000);
-          const end   = new Date(sunrise.getTime() - 30*60000);
+    // Nuit "aéronautique" = fin du crépuscule civil (soir) -> début du crépuscule civil (matin)
+    const start = new Date(j.results.civil_twilight_end);    // soir (-6°)
+    const end   = new Date(j.results.civil_twilight_begin);  // matin (-6°)
 
-          const now = new Date();
-          const isNight = (now >= start) || (now <= end);
+    const now = new Date();
+    const isNight = (now >= start) || (now <= end);
 
-          nightStatusEl.textContent = isNight ? "NUIT" : "JOUR";
-          nightWindowEl.textContent = `Début : ${start.toLocaleTimeString()} • Fin : ${end.toLocaleTimeString()}`;
-        }catch(e){
-          nightStatusEl.textContent = "--";
-          nightWindowEl.textContent = "Début : -- • Fin : --";
-        }
-      }
+    const fmt = (d) => d.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
 
+    nightStatusEl.textContent = isNight ? "NUIT" : "JOUR";
+    nightWindowEl.textContent = `Début : ${fmt(start)} • Fin : ${fmt(end)}`;
+  }catch(e){
+    nightStatusEl.textContent = "--";
+    nightWindowEl.textContent = "Début : -- • Fin : --";
+  }
+}
       async function updateMetarTaf(){
         try{
           const ids = "NWWM,NWWW";
